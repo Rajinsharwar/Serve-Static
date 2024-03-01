@@ -8,6 +8,8 @@
  * License: GPLv2
  */
 
+namespace ServeStatic\Main;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }

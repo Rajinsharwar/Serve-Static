@@ -1,5 +1,6 @@
 <?php
 
+use ServeStatic\Main;
 
 class ActivateTest extends \PHPUnit\Framework\TestCase {
 
