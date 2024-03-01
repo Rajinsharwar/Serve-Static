@@ -1,9 +1,8 @@
 <?php
 // ActivateTest.php
 require_once __DIR__ . '/../class/Activate.php';
-// Import the necessary namespaces
 
-class ActivateTest extends TestCase {
+class ActivateTest extends \PHPUnit\Framework\TestCase {
 
     public function testOneMethod() {
         $instance = new Activate();
