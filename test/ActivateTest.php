@@ -1,13 +1,21 @@
 <?php
+// ActivateTest.php
 
-use ServeStatic\Main;
+// Import the necessary namespaces
+use ServeStatic\Main\Activate;
+use PHPUnit\Framework\TestCase;
 
-class ActivateTest extends \PHPUnit\Framework\TestCase {
+class ActivateTest extends TestCase {
 
-    public function testone(){
+    public function testOneMethod() {
+        // Arrange
         $instance = new Activate();
-        $ex = 5;
-    
-        self::assertEquals($ex, $a);
+        $expected = 5;
+
+        // Act
+        $result = $instance->one($expected);
+
+        // Assert
+        $this->assertEquals($expected, $result);
     }
 }
