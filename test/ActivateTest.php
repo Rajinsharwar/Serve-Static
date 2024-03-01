@@ -2,7 +2,7 @@
 // ActivateTest.php
 
 // Import the necessary namespaces
-use ServeStatic\Main\Activate;
+use ServeStatic\Main;
 use PHPUnit\Framework\TestCase;
 
 class ActivateTest extends TestCase {
