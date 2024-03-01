@@ -6,8 +6,8 @@ class ActivateTest extends \PHPUnit\Framework\TestCase {
 
     public function testOneMethod() {
         $instance = new Activate();
-        $ex = 5;
+        $a = $instance->one(5);
     
-        self::assertEquals($ex, $a);
+        self::assertEquals(5, $a);
     }
 }
