@@ -17,7 +17,7 @@ It will generate static HTML copies of your webpages which will be then served u
 
 This plugin is really handy and helpful if your webpages are mainly static, like websites of Blogs, portfolios, company portfolios, service, and many more. This plugin doesn't support any dynamic content caching, that means, all none of your dynamic content will be showing in the frontend, rather, a static version of that content will be showing.
 
-This plugin also comes with home-made HTML, CSS and JS minification features, whcih you can use to auto-minify the static files. This ensures more lightness of the HTML pages, and more boost to your page speed. Also, you can auto-warm the cache using the Warm feature, which will stimulate a visit on all your pages, to create the static files before they are served to your visitors.
+This plugin also comes with home-made HTML, CSS and JS minification features, which you can use to auto-minify the static files. This ensures more lightness of the HTML pages, and more boost to your page speed. Also, you can auto-warm the cache using the Warm feature, which will stimulate a visit on all your pages, to create the static files before they are served to your visitors.
 
 == Usage ==
 
