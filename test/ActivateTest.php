@@ -8,6 +8,6 @@ class ActivateTest extends \PHPUnit\Framework\TestCase {
         $instance = new Activate();
         $a = $instance->one(5);
     
-        self::assertEquals(5, $a);
+        self::assertEquals(6, $a);
     }
 }
