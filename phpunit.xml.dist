@@ -1,0 +1,28 @@
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<php>
+		<env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/wp-config.php" />
+	</php>
+	<testsuites>
+		<testsuite name="All Tests">
+			<directory suffix=".php">tests</directory>
+		</testsuite>
+	</testsuites>
+	<coverage processUncoveredFiles="false">
+		<include>
+			<directory suffix=".php">providers</directory>
+			<file>class-two-factor-compat.php</file>
+			<file>class-two-factor-core.php</file>
+			<file>two-factor.php</file>
+		</include>
+		<report>
+			<clover outputFile="tests/logs/clover.xml" />
+		</report>
+	</coverage>
+</phpunit>

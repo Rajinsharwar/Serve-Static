@@ -1,0 +1,47 @@
+name: JS/CSS
+
+# Run on
+on:
+  push:
+    # any branch
+    branches:
+      - '*'
+    # If files matching these patterns have changed
+    paths:
+      - 'package.json'
+      - '**.js'
+      - '**.css'
+      - readme.txt
+      - .github/workflows/js-css.yml
+jobs:
+
+  lint:
+    name: Lint and Test JS And CSS
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - name: Setup PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Lint JS
+        run: npm run lint:js
+
+      - name: Lint CSS
+        run: npm run lint:css
+
+      - name: Build
+        run: npm run build
