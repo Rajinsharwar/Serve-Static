@@ -13,25 +13,25 @@ jobs:
         with:
           name: plugin-zip
           path: plugin.zip
+      - name: Get artifact path
+        id: get-artifact-path
+        run: echo "::set-output name=path::$(find ${{ github.workspace }} -name 'plugin.zip')"
 
   run:
     needs: create-zip
     runs-on: ubuntu-latest
     steps:
-      # - name: Start wp-env
-      #   uses: godaddy-wordpress/setup-wp-env@v1
-      #   with:
-      #     core: "WordPress/WordPress"
-      #     phpVersion: "8.1"
-      #     plugins: '["plugin.zip"]'
       - name: Start wp-env
-        run: |
-          npm run wp-env start
+        uses: godaddy-wordpress/setup-wp-env@v1
+        with:
+          core: "WordPress/WordPress"
+          phpVersion: "8.1"
+          plugins: ${{ steps.get-artifact-path.outputs.path }}
       - name: Checkout
         uses: actions/checkout@v4
-      # - name: Start WP ENV
-      #   run: |
-      #     npm run wp-env start
+      - name: Start WP ENV
+        run: |
+          npm run wp-env start
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
