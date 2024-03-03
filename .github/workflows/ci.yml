@@ -23,7 +23,7 @@ jobs:
         with:
           core: "WordPress/WordPress"
           phpVersion: "8.1"
-          plugins: '["./plugin.zip"]'
+          plugins: '["plugin.zip"]'
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start WP ENV
