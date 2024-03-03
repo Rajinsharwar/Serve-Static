@@ -8,12 +8,78 @@
 /**
  * Sample test case.
  */
-class Test_Starter_Plugin extends WP_UnitTestCase {
-	public function testone(){
-		$activate = new Activate();
-		$activate->one(2);
-		$this->assertEquals( 2, $activate->one(2) );
-	}
+class Test_Server_Class extends WP_UnitTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        // Set up any necessary objects here.
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        // Tear down any necessary objects here.
+    }
+
+    // Test is_apache() method
+    public function test_is_apache() {
+        // Instantiate the Server class
+        $server = new Server();
+
+        // Mock the $_SERVER global variable
+        $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.4.18';
+
+        // Test if server is detected as Apache
+        $this->assertTrue($server->is_apache());
+
+        // Clean up
+        unset($_SERVER['SERVER_SOFTWARE']);
+    }
+
+    // Test is_litespeed() method
+    public function test_is_litespeed() {
+        // Instantiate the Server class
+        $server = new Server();
+
+        // Mock the $_SERVER global variable
+        $_SERVER['SERVER_SOFTWARE'] = 'LiteSpeed';
+
+        // Test if server is detected as LiteSpeed
+        $this->assertTrue($server->is_litespeed());
+
+        // Clean up
+        unset($_SERVER['SERVER_SOFTWARE']);
+    }
+
+    // Test is_nginx() method
+    public function test_is_nginx() {
+        // Instantiate the Server class
+        $server = new Server();
+
+        // Mock the $_SERVER global variable
+        $_SERVER['SERVER_SOFTWARE'] = 'nginx/1.18.0';
+
+        // Test if server is detected as nginx
+        $this->assertTrue($server->is_nginx());
+
+        // Clean up
+        unset($_SERVER['SERVER_SOFTWARE']);
+    }
+
+    // Test is_iis() method
+    public function test_is_iis() {
+        // Instantiate the Server class
+        $server = new Server();
+
+        // Mock the $_SERVER global variable
+        $_SERVER['SERVER_SOFTWARE'] = 'Microsoft-IIS/10.0';
+
+        // Test if server is detected as IIS
+        $this->assertTrue($server->is_iis());
+
+        // Clean up
+        unset($_SERVER['SERVER_SOFTWARE']);
+    }
 	// public function set_up() {
     //     parent::set_up();
         
