@@ -18,12 +18,15 @@ jobs:
     needs: create-zip
     runs-on: ubuntu-latest
     steps:
-      - name: Start wp-env
-        uses: godaddy-wordpress/setup-wp-env@v1
-        with:
-          core: "WordPress/WordPress"
-          phpVersion: "8.1"
-          plugins: '["plugin.zip"]'
+      # - name: Start wp-env
+      #   uses: godaddy-wordpress/setup-wp-env@v1
+      #   with:
+      #     core: "WordPress/WordPress"
+      #     phpVersion: "8.1"
+      #     plugins: '["plugin.zip"]'
+      # - name: Start wp-env
+      #   run: |
+      #     npm run wp-env start
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start WP ENV
