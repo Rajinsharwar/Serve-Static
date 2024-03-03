@@ -12,8 +12,8 @@ jobs:
           plugins: '["https://wordpress.org/plugins/files/2024/02/28_22-03-24_serve-static.zip"]'
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install dependencies
-        run: composer self-update && composer install && composer dump-autoload
+      # - name: Install dependencies
+      #   run: composer self-update && composer install && composer dump-autoload
       - name: Run tests and collect coverage
         run: vendor/bin/phpunit --coverage-clover coverage.xml .
       - name: Upload coverage to Codecov
