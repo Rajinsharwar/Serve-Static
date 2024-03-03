@@ -24,14 +24,14 @@ jobs:
       #     core: "WordPress/WordPress"
       #     phpVersion: "8.1"
       #     plugins: '["plugin.zip"]'
-      # - name: Start wp-env
-      #   run: |
-      #     npm run wp-env start
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Start WP ENV
+      - name: Start wp-env
         run: |
           npm run wp-env start
+      - name: Checkout
+        uses: actions/checkout@v4
+      # - name: Start WP ENV
+      #   run: |
+      #     npm run wp-env start
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
