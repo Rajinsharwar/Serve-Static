@@ -25,6 +25,9 @@ jobs:
       - name: Install Composer
         run: |
           composer install
+      - name: Run tests CLI
+        run: |
+          npm run composer:tests-cli
       - name: Run unit tests
         run: |
           npm run test:unit
