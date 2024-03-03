@@ -8,7 +8,7 @@ jobs:
         uses: godaddy-wordpress/setup-wp-env@v1
         with:
           core: "WordPress/WordPress"
-          phpVersion: "8.2"
+          phpVersion: "8.1"
           plugins: '["."]'
       - name: Checkout
         uses: actions/checkout@v4
