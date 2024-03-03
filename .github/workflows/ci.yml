@@ -9,9 +9,12 @@ jobs:
         with:
           core: "WordPress/WordPress"
           phpVersion: "8.1"
-          plugins: '["https://wordpress.org/plugins/files/2024/02/28_22-03-24_serve-static.zip"]'
+          plugins: '["https://github.com/Rajinsharwar/Serve-Static/archive/refs/tags/test.zip"]'
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Start WP ENV
+        run: |
+          npm run wp-env start
       # - name: Install dependencies
       #   run: composer self-update && composer install && composer dump-autoload
       - name: Setup Node
