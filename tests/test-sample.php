@@ -9,16 +9,12 @@
  * Sample test case.
  */
 class Test_Server_Class extends WP_UnitTestCase {
-    public function setUp() {
-        parent::setUp();
-
-        // Set up any necessary objects here.
+	public function set_up() {
+        parent::set_up();
     }
 
-    public function tearDown() {
-        parent::tearDown();
-
-        // Tear down any necessary objects here.
+    public function tear_down() {
+        parent::tear_down();
     }
 
     // Test is_apache() method
