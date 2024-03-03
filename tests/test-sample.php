@@ -11,6 +11,9 @@
 class Test_Server_Class extends WP_UnitTestCase {
 	public function set_up() {
         parent::set_up();
+        
+		// Instantiate the Server class
+        $this->server = new Server();
     }
 
     public function tear_down() {
@@ -19,14 +22,12 @@ class Test_Server_Class extends WP_UnitTestCase {
 
     // Test is_apache() method
     public function test_is_apache() {
-        // Instantiate the Server class
-        $server = new Server();
 
         // Mock the $_SERVER global variable
         $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.4.18';
 
         // Test if server is detected as Apache
-        $this->assertTrue($server->is_apache());
+        $this->assertTrue($this->server->is_apache());
 
         // Clean up
         unset($_SERVER['SERVER_SOFTWARE']);
@@ -34,14 +35,12 @@ class Test_Server_Class extends WP_UnitTestCase {
 
     // Test is_litespeed() method
     public function test_is_litespeed() {
-        // Instantiate the Server class
-        $server = new Server();
 
         // Mock the $_SERVER global variable
         $_SERVER['SERVER_SOFTWARE'] = 'LiteSpeed';
 
         // Test if server is detected as LiteSpeed
-        $this->assertTrue($server->is_litespeed());
+        $this->assertTrue($this->server->is_litespeed());
 
         // Clean up
         unset($_SERVER['SERVER_SOFTWARE']);
@@ -49,14 +48,12 @@ class Test_Server_Class extends WP_UnitTestCase {
 
     // Test is_nginx() method
     public function test_is_nginx() {
-        // Instantiate the Server class
-        $server = new Server();
 
         // Mock the $_SERVER global variable
         $_SERVER['SERVER_SOFTWARE'] = 'nginx/1.18.0';
 
         // Test if server is detected as nginx
-        $this->assertTrue($server->is_nginx());
+        $this->assertTrue($this->server->is_nginx());
 
         // Clean up
         unset($_SERVER['SERVER_SOFTWARE']);
@@ -64,18 +61,80 @@ class Test_Server_Class extends WP_UnitTestCase {
 
     // Test is_iis() method
     public function test_is_iis() {
-        // Instantiate the Server class
-        $server = new Server();
 
         // Mock the $_SERVER global variable
         $_SERVER['SERVER_SOFTWARE'] = 'Microsoft-IIS/10.0';
 
         // Test if server is detected as IIS
-        $this->assertTrue($server->is_iis());
+        $this->assertTrue($this->server->is_iis());
 
         // Clean up
         unset($_SERVER['SERVER_SOFTWARE']);
     }
+
+	// Test server_is_nginx() method
+    public function test_server_is_nginx() {
+        // Mock the get_transient function to return false
+        $this->assertFalse(get_transient('serve_static_nginx_notice_dismissed'));
+
+        // Set up output buffering to capture the output of server_is_nginx()
+        ob_start();
+        $this->server->server_is_nginx();
+        $output = ob_get_clean();
+
+        // Assert that the output contains the expected HTML content
+        $this->assertContains('Looks like you are using a NGINX server.', $output);
+    }
+
+    // Test dismiss_nginx_server_notice() method
+    public function test_dismiss_nginx_server_notice() {
+        // Call the method to set the transient
+        $this->server->dismiss_nginx_server_notice();
+
+        // Assert that the transient is set
+        $this->assertEquals(1, get_transient('serve_static_nginx_notice_dismissed'));
+    }
+
+    // Test missed_cron() method
+    public function test_missed_cron() {
+        // Mock the wp_next_scheduled function to return false
+        $this->assertFalse(wp_next_scheduled('serve_static_cache_cron_event'));
+
+        // Set up output buffering to capture the output of missed_cron()
+        ob_start();
+        $this->server->missed_cron();
+        $output = ob_get_clean();
+
+        // Assert that the output contains the expected HTML content
+        $this->assertContains('The following scheduled event failed to run.', $output);
+    }
+
+    // Test cron_not_working() method
+    public function test_cron_not_working() {
+        // Set up the transient to trigger the notice
+        set_transient('serve_static_cron_not_working_notice_dismissed', false);
+
+        // Set up output buffering to capture the output of cron_not_working()
+        ob_start();
+        $this->server->cron_not_working();
+        $output = ob_get_clean();
+
+        // Assert that the output contains the expected HTML content
+        $this->assertContains('The following scheduled event failed to run.', $output);
+    }
+
+    // Test cron_not_scheduled() method
+    public function test_cron_not_scheduled() {
+        // Mock the wp_next_scheduled function to return false
+        $this->assertFalse(wp_next_scheduled('custom_warmup_cache_cron'));
+
+        // Set up the method to trigger the notice
+        $this->server->cron_not_scheduled();
+
+        // Check if the notice is added to admin_notices
+        $this->assertTrue(has_action('admin_notices', array($this->server, 'cron_not_scheduled_notice')));
+    }
+	
 	// public function set_up() {
     //     parent::set_up();
         
