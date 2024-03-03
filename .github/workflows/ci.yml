@@ -1,0 +1,22 @@
+name: Unit Tests Coverage
+on: [push, pull_request]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start wp-env
+        uses: godaddy-wordpress/setup-wp-env@v1
+        with:
+          core: "WordPress/WordPress"
+          phpVersion: "8.2"
+          plugins: '["."]'
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: composer self-update && composer install && composer dump-autoload
+      - name: Run tests and collect coverage
+        run: vendor/bin/phpunit --coverage-clover coverage.xml .
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4-beta
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}

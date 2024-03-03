@@ -1,0 +1,20 @@
+name: "Plugin Check"
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - trunk
+      - "releases/*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run plugin check
+        uses: swissspidy/wp-plugin-check-action@v1
+        with:
+          exclude-checks: "trademarks,file_type"
+          exclude-directories: ".github,bin,vendor"
