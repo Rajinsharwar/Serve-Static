@@ -1,9 +1,9 @@
 {
   "scripts": {
     "wp-env": "wp-env",
-    "composer": "wp-env run cli --env-cwd=wp-content/plugins/starter-plugin composer",
-    "composer:tests-cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/starter-plugin composer",
-    "test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/starter-plugin ./vendor/bin/phpunit"
+    "composer": "wp-env run cli --env-cwd=wp-content/plugins/Serve-Static composer",
+    "composer:tests-cli": "wp-env run tests-cli --env-cwd=wp-content/plugins/Serve-Static composer",
+    "test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/Serve-Static ./vendor/bin/phpunit"
 },
 
   "devDependencies": {
