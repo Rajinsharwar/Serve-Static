@@ -48,10 +48,6 @@ class Activate
         }
     }
 
-    public function one($a){
-        return $a;
-    }
-
     public function rules(){
         $begin = '# BEGIN Serve Static Cache';
         $end = '# END Serve Static Cache';
