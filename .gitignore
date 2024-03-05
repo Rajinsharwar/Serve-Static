@@ -2,3 +2,4 @@ node_modules/
 /vendor/
 *.cache
 .phpunit.result.cache
+*.result.cache

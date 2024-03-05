@@ -238,7 +238,7 @@ class Activate
     }
 
     // Function to get the size of a directory
-    private function get_directory_size($dir)
+    public function get_directory_size($dir)
     {
         $size = 0;
 

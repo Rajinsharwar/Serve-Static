@@ -18,7 +18,7 @@ class StaticServe {
     public function Build(){
         
         if ( ! isset( $_SERVER['HTTP_X_SERVE_STATIC_REQUEST'] ) || $_SERVER['HTTP_X_SERVE_STATIC_REQUEST'] !== 'true' ) {
-            return; // Return early if the request is not from SendRequest()
+            return false; // Return early if the request is not from SendRequest()
         }
 
         /**
@@ -35,25 +35,25 @@ class StaticServe {
         if ( get_option( 'serve_static_make_static' ) == 1 ){
             $excluded_urls = get_option('serve_static_exclude_urls', array());
             if ( isset($excluded_urls[$current_url]) ){
-                return;
+                return false;
             }
 
         } elseif ( get_option( 'serve_static_post_types_static' ) == 1 ){
             $excluded_urls = get_option('serve_static_exclude_urls', array());
             if ( isset($excluded_urls[$current_url]) ){
-                return;
+                return false;
             }
 
             $haystack = get_option('serve_static_specific_post_types', array());
             $needle = get_post_type(url_to_postid($current_url));
             if ( ! isset( $haystack[ $needle ] ) ){
-                return;
+                return false;
             }
 
         } elseif ( get_option( 'serve_static_manual_entry' ) == 1 ){
             $serving_static = get_option('serve_static_urls', array());
             if ( ! isset( $serving_static[ $current_url ] ) ){
-                return;
+                return false;
             }
         }
         $html_path = WP_CONTENT_DIR . '/html-cache' . wp_parse_url($current_url, PHP_URL_PATH) . '/index.html';
