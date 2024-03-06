@@ -19,6 +19,18 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 		set_current_screen( 'edit-post' );
 
         update_option( 'serve_static_master_key', 1 );
+
+        global $wp_rewrite;
+
+        // Define your custom permalink structure here
+        $custom_permalink_structure = '/%postname%/';
+
+        // Save permalinks to a custom setting
+        update_option('permalink_structure', $custom_permalink_structure);
+
+        // Flush and regenerate rewrite rules
+        $wp_rewrite->set_permalink_structure($custom_permalink_structure);
+        $wp_rewrite->flush_rules(true);
         
 		// Instantiate the Triggers class
         $this->triggers = new Triggers();
@@ -76,7 +88,48 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
         $this->triggers->flush_on_post_save_all($post_id, $post_object, false);
-        $cache_dir = WP_CONTENT_DIR . '/html-cache';
         $this->assertTrue($this->is_dir_empty($cache_dir));
+
+        delete_option( 'serve_static_make_static' );
+    }
+
+    public function test_regenerate_manual_entry(){
+
+        $post_id = wp_insert_post(array(
+            'post_title' => 'Hello World',
+            'post_content' => 'This is a test post.',
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'post_name' => 'hello-world1'
+        ));
+
+        $post_permalink = get_permalink($post_id);
+
+        $post_object = get_post($post_id);
+
+        $cache_dir = WP_CONTENT_DIR . '/html-cache/hello-world1';
+        // Ensure the cache directory exists
+        if (!file_exists($cache_dir)) {
+            mkdir($cache_dir, 0755, true);
+        }
+
+        // Set the file path
+        $file_path = $cache_dir . '/index.html';
+
+        // Your content to be written to the file
+        $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
+
+        // Write content to the file
+        $this->assertIsInt(file_put_contents($file_path, $file_content));
+
+        update_option('serve_static_manual_entry', 1);
+        update_option('serve_static_urls', array($post_permalink => 1));
+
+        $this->assertFalse($this->is_dir_empty($cache_dir));
+        $this->triggers->flush_on_post_save_all($post_id, $post_object, false);
+        $this->assertTrue($this->is_dir_empty($cache_dir));
+
+        delete_option( 'serve_static_manual_entry' );
+        delete_option( 'serve_static_urls' );
     }
 }
