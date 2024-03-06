@@ -141,7 +141,6 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         update_option('serve_static_exclude_urls', array('http://wp-develop.local/page1' => 1));
 
         $this->assertNull($this->static_serve->Build());
-        $this->clean_up();
 
         ob_start();
         ob_end_flush();
@@ -207,7 +206,6 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         update_option('serve_static_specific_post_types', array('post' => 1));
 
         $this->assertNull($this->static_serve->Build());
-        $this->clean_up();
 
         ob_start();
         ob_end_flush();
@@ -273,8 +271,6 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         update_option('serve_static_urls', array($site_url . '/' => 1));
     
         $this->assertNull($this->static_serve->Build());
-    
-        $this->clean_up();
     
         ob_start();
         ob_end_flush();
@@ -344,7 +340,6 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $this->assertIsInt(file_put_contents($file_path, $file_content));
 
         $this->assertFalse($this->static_serve->is_cache_available(get_site_url() . '/blog'));
-        $this->clean_up();
     }
 
     public function test_cache_available(){
@@ -364,7 +359,6 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $this->assertIsInt(file_put_contents($file_path, $file_content));
 
         $this->assertTrue($this->static_serve->is_cache_available(get_site_url() . '/blog'));
-        $this->clean_up();
     }
     
 }
