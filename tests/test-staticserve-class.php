@@ -340,6 +340,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $this->assertIsInt(file_put_contents($file_path, $file_content));
 
         $this->assertFalse($this->static_serve->is_cache_available(get_site_url() . '/blog'));
+        $this->static_serve->Flush();
     }
 
     public function test_cache_available(){
@@ -359,6 +360,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $this->assertIsInt(file_put_contents($file_path, $file_content));
 
         $this->assertTrue($this->static_serve->is_cache_available(get_site_url() . '/blog'));
+        $this->static_serve->Flush();
     }
     
 }
