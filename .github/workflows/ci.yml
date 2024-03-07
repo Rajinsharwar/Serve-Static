@@ -9,7 +9,7 @@ jobs:
       - name: Zip repository
         run: zip -r plugin.zip .
       - name: Upload zip file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: plugin-zip
           path: plugin.zip
@@ -57,7 +57,7 @@ jobs:
         run: |
           zip -r serve-static.zip . -x ".github/workflows/*" -x "tests/*" -x ".git/*" -x ".github/*" -x ".gitignore" -x ".phpunit.result.cache" -x ".wp-env.json" -x "composer.json" -x "composer.lock" -x "package-lock.json" -x "package.json" -x "phpunit.xml.dist"
       - name: Upload Production ZIP
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: serve-static
           path: serve-static.zip
