@@ -21,7 +21,7 @@ jobs:
     needs: create-zip
     runs-on: ubuntu-latest
     steps:
-      - name: Start wp-env
+      - name: Setup wp-env
         uses: godaddy-wordpress/setup-wp-env@v1
         with:
           core: "WordPress/WordPress"
