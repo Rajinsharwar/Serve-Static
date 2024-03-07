@@ -568,8 +568,6 @@ class Activate
                 $warmupnow = 0;
                 update_option('serve_static_warm_on_save', 0);
             }
-            // $warmupnow = isset($_POST['serve_static_warm_on_save']) ? 1 : 0;
-            // update_option('serve_static_warm_on_save', $warmupnow);
 
             if (isset($warmupnow) && $warmupnow == 1) {
                 // Schedule warmup and flush rewrite rules
