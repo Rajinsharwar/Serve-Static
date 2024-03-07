@@ -77,7 +77,7 @@ class WarmUp
     {
         $request_headers['X-Serve-Static-Request'] = 'true';
         
-        wp_remote_get(
+        $response = wp_remote_get(
             $url,
             [
                 'timeout' => $timeout,
@@ -90,6 +90,13 @@ class WarmUp
 
         if ( $url == $last_url ){
             delete_transient('serve_static_cache_warming_in_progress');
+        }
+
+        if ( ! is_array($response) ){
+            error_log( 'Error while sending wp_remote_get()' );
+            return false;
+        } else {
+            return true;
         }
 
     }
