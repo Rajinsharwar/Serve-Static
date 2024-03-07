@@ -55,9 +55,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Create Production ZIP
         run: |
-          zip -r serve-static.zip . -x ".github/workflows/*" -x "tests/*" -x ".gitignore" -x ".phpunit.result.cache" -x ".wp-env.json" -x "composer.json" -x "composer.lock" -x "package-lock.json" -x "package.json" -x "phpunit.xml.dist"
+          zip -r serve-static.zip . -x ".github/workflows/*" -x "tests/*" -x ".git/*" -x ".github/*" -x ".gitignore" -x ".phpunit.result.cache" -x ".wp-env.json" -x "composer.json" -x "composer.lock" -x "package-lock.json" -x "package.json" -x "phpunit.xml.dist"
       - name: Upload Production ZIP
         uses: actions/upload-artifact@v2
         with:
-          name: serve-static-zip
+          name: serve-static
           path: serve-static.zip
