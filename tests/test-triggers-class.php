@@ -90,6 +90,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         $this->triggers->flush_on_post_save_all($post_id, $post_object, false);
         $this->assertTrue($this->is_dir_empty($cache_dir));
 
+        wp_delete_post($post_id);
         delete_option( 'serve_static_make_static' );
     }
 
@@ -129,6 +130,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         $this->triggers->flush_on_post_save_all($post_id, $post_object, false);
         $this->assertTrue($this->is_dir_empty($cache_dir));
 
+        wp_delete_post($post_id);
         delete_option( 'serve_static_manual_entry' );
         delete_option( 'serve_static_urls' );
     }

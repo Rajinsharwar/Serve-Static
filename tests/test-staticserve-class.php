@@ -212,6 +212,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         ob_get_clean();
 
         // Unset the mock request header
+        wp_delete_post($post_id);
         unset($_SERVER['HTTP_X_SERVE_STATIC_REQUEST']);
         unset($_SERVER['REQUEST_URI']);
         delete_option( 'serve_static_exclude_urls' );
@@ -277,6 +278,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         ob_get_clean();
     
         // Unset the mock request header
+        wp_delete_post($new_page_id);
         unset($_SERVER['HTTP_X_SERVE_STATIC_REQUEST']);
         delete_option( 'serve_static_manual_entry' );
     }
