@@ -17,7 +17,7 @@ jobs:
         id: get-artifact-path
         run: echo "::set-output name=path::$(find ${{ github.workspace }} -name 'plugin.zip')"
 
-  run:
+  run-unit-tests:
     needs: create-zip
     runs-on: ubuntu-latest
     steps:
@@ -46,3 +46,18 @@ jobs:
       - name: Run unit tests
         run: |
           npm run test:unit
+
+  create-production-zip:
+    needs: run-unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create Production ZIP
+        run: |
+          zip -r serve-static.zip . -x ".github/workflows/*" -x "tests/*" -x ".gitignore" -x ".phpunit.result.cache" -x ".wp-env.json" -x "composer.json" -x "composer.lock" -x "package-lock.json" -x "package.json" -x "phpunit.xml.dist"
+      - name: Upload Production ZIP
+        uses: actions/upload-artifact@v2
+        with:
+          name: serve-static-zip
+          path: serve-static.zip
