@@ -15,7 +15,7 @@ jobs:
           path: plugin.zip
       - name: Get artifact path
         id: get-artifact-path
-        run: echo "::set-output name=path::$(find ${{ github.workspace }} -name 'plugin.zip')"
+        run: echo "ARTIFACT_PATH=$(find ${{ github.workspace }} -name 'plugin.zip')" >> $GITHUB_ENV
 
   run-unit-tests:
     needs: create-zip
