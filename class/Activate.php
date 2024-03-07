@@ -535,20 +535,6 @@ class Activate
                 $warmupnow = 1;
             }
 
-            // if ( isset($_POST['serve_static_exclude_urls']) ) {
-            //     $excluded_urls = explode("\n", sanitize_textarea_field($_POST['serve_static_exclude_urls']));
-            //     $excluded_urls = array_map('esc_url_raw', $excluded_urls);
-
-            //     // Add a trailing slash to URLs if it doesn't already exist
-            //     foreach ($excluded_urls as &$excluded_url) {
-            //         if (substr($excluded_url, -1) !== '/') {
-            //             $excluded_url .= '/';
-            //         }
-            //     }
-            //     update_option('serve_static_exclude_urls', $excluded_urls);
-            //     $warmupnow = 1;
-            // }
-
             //Exclude urls.
             if (isset($_POST['serve_static_exclude_urls'])) {
                 $excluded_urls = explode("\n", sanitize_textarea_field($_POST['serve_static_exclude_urls']));
