@@ -447,7 +447,7 @@ class Activate
         if (isset($_POST['submit'])) {
             // Verify nonce
             if (!isset($_POST['serve_static_update_nonce']) || !wp_verify_nonce($_POST['serve_static_update_nonce'], 'serve_static_update_options')) {
-                return;
+                return false;
             }
 
             if ( isset( $_POST[ 'serve_static_master_key' ] ) ) {

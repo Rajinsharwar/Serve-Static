@@ -103,4 +103,100 @@ class Test_Activate_Class extends WP_UnitTestCase {
         // Assert that the calculated size matches the expected size
         $this->assertEquals($expectedSize, $size);
     }
+
+    public function test_settings_save_master_key_on(){
+        $_POST['submit'] = 'Save';
+        $_POST['serve_static_update_nonce'] = wp_create_nonce('serve_static_update_options');
+        $_POST[ 'serve_static_master_key' ] = true;
+
+        $this->assertNull( $this->activate->SettingsSave() );
+
+        $this->assertEquals( 1, get_option( 'serve_static_master_key' ) );
+
+        unset( $_POST['submit'] );
+        unset( $_POST['serve_static_update_nonce'] );
+        unset( $_POST['serve_static_master_key'] );
+        delete_option( 'serve_static_master_key' );
+    }
+
+    public function test_settings_save_master_key_off(){
+        $_POST['submit'] = 'Save';
+        $_POST['serve_static_update_nonce'] = wp_create_nonce('serve_static_update_options');
+
+        $this->assertNull( $this->activate->SettingsSave() );
+
+        $this->assertEquals( 0, get_option( 'serve_static_master_key' ) );
+
+        unset( $_POST['submit'] );
+        unset( $_POST['serve_static_update_nonce'] );
+        delete_option( 'serve_static_master_key' );
+    }
+
+    public function test_settings_save_entry_type_manual(){
+        $_POST['submit'] = 'Save';
+        $_POST['serve_static_update_nonce'] = wp_create_nonce('serve_static_update_options');
+        $_POST[ 'serve_static_master_key' ] = true;
+        $_POST['serve_static_entry_type'] = 'manual';
+
+        $this->assertNull( $this->activate->SettingsSave() );
+
+        $this->assertEquals( 1, get_option( 'serve_static_master_key' ) );
+
+        $this->assertEquals( 1, get_option( 'serve_static_manual_entry' ) );
+        $this->assertEquals( 0, get_option( 'serve_static_make_static' ) );
+        $this->assertEquals( 0, get_option( 'serve_static_post_types_static' ) );
+
+        unset( $_POST['submit'] );
+        unset( $_POST['serve_static_update_nonce'] );
+        unset( $_POST['serve_static_master_key'] );
+        unset( $_POST['serve_static_entry_type'] );
+        delete_option( 'serve_static_master_key' );
+    }
+
+    public function test_settings_save_entry_type_all(){
+        $_POST['submit'] = 'Save';
+        $_POST['serve_static_update_nonce'] = wp_create_nonce('serve_static_update_options');
+        $_POST[ 'serve_static_master_key' ] = true;
+        $_POST['serve_static_entry_type'] = 'all';
+
+        $this->assertNull( $this->activate->SettingsSave() );
+
+        $this->assertEquals( 1, get_option( 'serve_static_master_key' ) );
+
+        $this->assertEquals( 0, get_option( 'serve_static_manual_entry' ) );
+        $this->assertEquals( 1, get_option( 'serve_static_make_static' ) );
+        $this->assertEquals( 0, get_option( 'serve_static_post_types_static' ) );
+
+        unset( $_POST['submit'] );
+        unset( $_POST['serve_static_update_nonce'] );
+        unset( $_POST['serve_static_master_key'] );
+        unset( $_POST['serve_static_entry_type'] );
+        delete_option( 'serve_static_master_key' );
+    }
+
+    public function test_settings_save_entry_type_post_types(){
+        $_POST['submit'] = 'Save';
+        $_POST['serve_static_update_nonce'] = wp_create_nonce('serve_static_update_options');
+        $_POST[ 'serve_static_master_key' ] = true;
+        $_POST['serve_static_entry_type'] = 'post_types';
+        $_POST['serve_static_specific_post_types'] = 'post';
+
+        $this->assertNull( $this->activate->SettingsSave() );
+
+        $this->assertEquals( 1, get_option( 'serve_static_master_key' ) );
+
+        $this->assertEquals( 0, get_option( 'serve_static_manual_entry' ) );
+        $this->assertEquals( 0, get_option( 'serve_static_make_static' ) );
+        $this->assertEquals( 1, get_option( 'serve_static_post_types_static' ) );
+
+        unset( $_POST['submit'] );
+        unset( $_POST['serve_static_update_nonce'] );
+        unset( $_POST['serve_static_master_key'] );
+        unset( $_POST['serve_static_entry_type'] );
+        unset( $_POST['serve_static_specific_post_types'] );
+        delete_option( 'serve_static_master_key' );
+        delete_option( 'serve_static_specific_post_types' );
+    }
+
+
 }
