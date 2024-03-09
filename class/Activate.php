@@ -423,7 +423,7 @@ class Activate
             <br><div class="postbox" style="border: 1px solid black;">
                 <h4 style="margin-left: 10px;">
                 <?php
-                    _e('I have spent many of my hours with this project so that you can serve a Static website. A <a href="https://wordpress.org/support/plugin/serve-static/reviews/?filter=5#new-post" target="_blank" style="color: #ffba00;">&#9733;&#9733;&#9733;&#9733;&#9733;</a> review will motivate me a lot.', 'serve-static'); //phpcs:ignore 
+                    _e('I have spent many of my hours with this project so that you can serve a Static website. A <a href="https://wordpress.org/support/plugin/serve_static/reviews/?filter=5#new-post" target="_blank" style="color: #ffba00;">&#9733;&#9733;&#9733;&#9733;&#9733;</a> review will motivate me a lot.', 'serve-static'); //phpcs:ignore 
                 ?>
                 </h4>
             </div>

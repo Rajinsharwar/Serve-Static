@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Serve-Static
+ * Plugin Name: Serve Static
  * Description: Cache and serve HTML copies of your webpages. Avoid the PHP hit on any page load, and deploy pages fully static on your server.
  * Version: 1.0.1
  * Author: Rajin Sharwar
@@ -16,6 +16,75 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! function_exists( 'WP_Filesystem' ) ) {
     require_once ABSPATH . 'wp-admin/includes/file.php';
 }
+
+if ( ! function_exists( 'serve_static_analytics' ) ) {
+
+    function serve_static_analytics() {
+        global $serve_static_analytics;
+
+        if ( ! isset( $serve_static_analytics ) ) {
+
+            require_once dirname(__FILE__) . '/inc/start.php';
+
+            $serve_static_analytics = fs_dynamic_init( array(
+                'id'                  => '15144',
+                'slug'                => 'serve_static',
+                'type'                => 'plugin',
+                'public_key'          => 'pk_64d60e26e8cbab86074543b09964d',
+                'is_premium'          => false,
+                'has_addons'          => false,
+                'has_paid_plans'      => false,
+                'menu'                => array(
+                    'slug'           => 'serve_static_settings',
+                    'first-path'     => 'admin.php?page=serve_static_guide',
+                    'account'        => false,
+                ),
+            ) );
+        }
+
+        return $serve_static_analytics;
+    }
+
+    serve_static_analytics();
+    do_action( 'serve_static_analytics_loaded' );
+}
+
+function serve_static_analytics_uninstall_cleanup(){
+    //Options
+    delete_option( 'serve_static_master_key' );
+    delete_option( 'serve_static_post_types_static' );
+    delete_option( 'serve_static_make_static' );
+    delete_option( 'serve_static_manual_entry' );
+    delete_option( 'serve_static_specific_post_types' );
+    delete_option( 'serve_static_js_minify_enabled' );
+    delete_option( 'serve_static_css_minify_enabled' );
+    delete_option( 'serve_static_html_minify_enabled' );
+    delete_option( 'serve_static_urls' );
+    delete_option( 'serve_static_exclude_urls' );
+    delete_option( 'serve_static_warm_on_save' );
+    delete_option( 'serve_static_cron_time' );
+
+    //Transients
+    $transients_to_delete = array(
+        'serve_static_htaccess_not_writable',
+        'serve_static_cron_not_running',
+        'serve_static_nginx_notice_dismissed',
+        'serve_static_apache_notice_dismissed',
+        'serve_static_cron_notice_dismissed',
+        'serve_static_wp_cron_notice_dismissed',
+        'serve_static_cron_not_working_notice_dismissed',
+        'serve_static_cron_not_scheduled_notice_dismissed',
+        'serve_static_plugin_modified_notice',
+        'serve_static_initial',
+        'serve_static_cache_warming_in_progress'
+    );
+
+    foreach ($transients_to_delete as $transient) {
+        delete_transient($transient);
+    }
+}
+
+serve_static_analytics()->add_action('after_uninstall', 'serve_static_analytics_uninstall_cleanup');
 
 WP_Filesystem();
 
