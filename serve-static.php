@@ -35,7 +35,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
                 'has_addons'          => false,
                 'has_paid_plans'      => false,
                 'menu'                => array(
-                    'slug'           => 'serve_static_settings',
+                    'slug'           => 'serve_static_guide',
                     'first-path'     => 'admin.php?page=serve_static_guide',
                     'account'        => false,
                 ),
