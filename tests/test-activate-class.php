@@ -26,7 +26,7 @@ class Test_Activate_Class extends WP_UnitTestCase {
 		set_current_screen( 'edit-post' );
         
         $this->activate = new Activate();
-        $this->admin = new Admin();
+        $this->admin = new ServeStatic\Class\Admin();
     }
 
     public function tear_down() {
