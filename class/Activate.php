@@ -166,7 +166,7 @@ class Activate
                 </style> 
                 <?php
             } elseif ( $admin_toolbar_parent === 'Serve Static - Cached' ) {
-                $static = new ServeStatic\Class\StaticServe();
+                $static = new StaticServe();
                 if ( $static->is_cache_available( $current_url ) === false ){
                     $admin_toolbar_parent = 'Cached but cache missing'; ?>
                         <style>

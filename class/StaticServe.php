@@ -533,6 +533,8 @@ class StaticServe {
             } else {
                 return false;
             }
+        } else {
+            return false;
         }
     }
 }
