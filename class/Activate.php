@@ -127,7 +127,7 @@ class Activate
 
             if ( ! is_admin() ){
 
-                $current_url = add_query_arg($_SERVER['QUERY_STRING'], '', home_url($_SERVER['REQUEST_URI']));
+                $current_url = esc_url_raw( add_query_arg( wp_unslash( $_SERVER['QUERY_STRING'] ), '', home_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
                 if ( get_option('serve_static_master_key') == 0 ){
                     $admin_toolbar_parent = 'Serve Static - Not Cached';
                 } elseif ( get_option(' serve_static_make_static ') == 1 ){
@@ -423,7 +423,13 @@ class Activate
             <br><div class="postbox" style="border: 1px solid black;">
                 <h4 style="margin-left: 10px;">
                 <?php
-                    _e('I have spent many of my hours with this project so that you can serve a Static website. A <a href="https://wordpress.org/support/plugin/serve_static/reviews/?filter=5#new-post" target="_blank" style="color: #ffba00;">&#9733;&#9733;&#9733;&#9733;&#9733;</a> review will motivate me a lot.', 'serve-static'); //phpcs:ignore 
+                printf(
+                    esc_html__(
+                        'I have spent many of my hours with this project so that you can serve a Static website. A %1$s review will motivate me a lot.',
+                        'serve-static'
+                    ),
+                    '<a href="' . esc_url( 'https://wordpress.org/support/plugin/serve_static/reviews/?filter=5#new-post' ) . '" target="_blank" style="color: #ffba00;">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+                );
                 ?>
                 </h4>
             </div>
@@ -434,7 +440,7 @@ class Activate
     public function SettingsSave() {
 
         if ( isset( $_POST[ 'stopwarming' ] ) ){
-            if (!isset($_POST['reset_cache_warming_nonce']) || !wp_verify_nonce($_POST['reset_cache_warming_nonce'], 'reset_cache_warming_data')) {
+            if ( ! isset( $_POST['reset_cache_warming_nonce'] ) && ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['reset_cache_warming_nonce'] ) ), 'reset_cache_warming_data' ) ) {
                 return;
             }
 
@@ -446,7 +452,7 @@ class Activate
 
         if (isset($_POST['submit'])) {
             // Verify nonce
-            if (!isset($_POST['serve_static_update_nonce']) || !wp_verify_nonce($_POST['serve_static_update_nonce'], 'serve_static_update_options')) {
+            if ( ! isset( $_POST['serve_static_update_nonce'] ) || ! wp_verify_nonce( wp_unslash( sanitize_text_field( $_POST['serve_static_update_nonce'] ) ), 'serve_static_update_options' ) ) {
                 return false;
             }
 
@@ -586,9 +592,9 @@ class Activate
         //Flush URL Cache.
         if (isset($_GET['action']) && $_GET['action'] === 'flush_url' && isset($_GET['flush_url_nonce'])) {
             
-            $nonce = sanitize_text_field(wp_unslash($_GET['flush_url_nonce']));
-            if (wp_verify_nonce($nonce, 'serve_static_flush_url_action')) {
-                $current_url = sanitize_url(urldecode($_GET['url']));
+            $nonce = isset( $_GET['flush_url_nonce'] ) ? sanitize_key( $_GET['flush_url_nonce'] ) : '';
+            if ( wp_verify_nonce( $nonce, 'serve_static_flush_url_action' ) ) {
+                $current_url = isset( $_GET['url'] ) ? esc_url_raw( wp_unslash( $_GET['url'] ) ) : '';
 
                 $flush = new StaticServe();
                 $flush->Flush($current_url);

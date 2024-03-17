@@ -27,7 +27,7 @@ class Server {
 			return true;
 		}
 
-		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stristr( htmlspecialchars( stripslashes( $_SERVER['SERVER_SOFTWARE'] ) ), 'Apache' ) !== false; // phpcs:ignore
+		return isset( $_SERVER['SERVER_SOFTWARE'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ), 'Apache' ) !== false; // phpcs:ignore
 	}
 
 
@@ -37,7 +37,7 @@ class Server {
 	 * @return bool
 	 */
 	public function is_litespeed() {
-		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stristr( htmlspecialchars( stripslashes( $_SERVER['SERVER_SOFTWARE'] ) ), 'LiteSpeed' ) !== false; // phpcs:ignore
+		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stristr( wp_unslash( sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ) ), 'LiteSpeed' ) !== false; // phpcs:ignore
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Server {
 	 * @return bool
 	 */
 	public function is_nginx() {
-		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stristr( htmlspecialchars( stripslashes( $_SERVER['SERVER_SOFTWARE'] ) ), 'nginx' ) !== false; // phpcs:ignore
+		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stripos( wp_unslash( sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ) ), 'nginx' ) !== false; // phpcs:ignore
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Server {
 	 * @return bool
 	 */
 	public function is_iis() {
-		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stristr( htmlspecialchars( stripslashes( $_SERVER['SERVER_SOFTWARE'] ) ), 'IIS' ) !== false; // phpcs:ignore
+		return isset( $_SERVER['SERVER_SOFTWARE'] ) && stripos( wp_unslash( sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ) ), 'IIS' ) !== false; // phpcs:ignore
 	}
 
     public function server_is_nginx(){
@@ -69,7 +69,7 @@ class Server {
         ?>
         <div class="notice notice-error serve-static-notice is-dismissible">
             <p><?php esc_html_e( 'Looks like you are using a NGINX server. Our plugin\'s rely on being able to modify the server\'s rewrite rules, which is not possible via PHP on your server. For being able to make this plugin functional in your server, you will be needing to add the rewrite rules manually to your nginx.conf file, and then restart your server. Below is the rewrite rules you need to add.', 'serve-static' ); ?></p>
-            <br><textarea readonly="readonly" id="serve_static_htaccess_rules" name="serve_static_htaccess_rules" class="large-text readonly" rows="6"><?php esc_html_e( $rule, 'serve-staic' ) //phpcs:ignore ?></textarea>
+            <br><textarea readonly="readonly" id="serve_static_htaccess_rules" name="serve_static_htaccess_rules" class="large-text readonly" rows="6"><?php echo esc_xml($rule) //phpcs:ignore ?></textarea>
             <p>
                 <a class="serve-static-dismiss" href="<?php echo esc_url( add_query_arg( 'serve_static_dismiss_nginx_notice', 'true' ) ); ?>"><?php esc_html_e( 'Dismiss', 'serve-static' ); ?></a>
             </p>
@@ -96,7 +96,7 @@ class Server {
         ?>
         <div class="notice notice-error serve-static-notice is-dismissible">
             <p><?php esc_html_e( 'Serve Static isn\'t able to add/modify the ".htaccess" of your website. We need to add some code in your .htaccess to make make this plugin functional. Please contact with your webhost to make sure the .htaccess file of your website is writable by plugins. Alternately, you can copy the below code to manually add in your .htaccess file. This notice should disappear when you have added the code. If still the issue persists, please share the issue with us in our support forum.', 'serve-static' ); ?></p>
-            <br><textarea readonly="readonly" id="serve_static_htaccess_rules" name="serve_static_htaccess_rules" class="large-text readonly" rows="6"><?php esc_html_e( $rule, 'serve-staic') //phpcs:ignore ?></textarea>
+            <br><textarea readonly="readonly" id="serve_static_htaccess_rules" name="serve_static_htaccess_rules" class="large-text readonly" rows="6"><?php echo esc_xml($rule) //phpcs:ignore ?></textarea>
             <p>
                 <a class="serve-static-dismiss" href="<?php echo esc_url( add_query_arg( 'serve_static_dismiss_apache_notice', 'true' ) ); ?>"><?php esc_html_e( 'Dismiss', 'serve-static' ); ?></a>
             </p>

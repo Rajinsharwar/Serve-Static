@@ -31,7 +31,7 @@ class StaticServe {
          */
 
         //Build the HTML, CSS and JS, and save in local.
-        $current_url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $current_url = 'http' . ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 's' : '' ) . '://' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) );
         if ( get_option( 'serve_static_make_static' ) == 1 ){
             $excluded_urls = get_option('serve_static_exclude_urls', array());
             if ( isset($excluded_urls[$current_url]) ){
