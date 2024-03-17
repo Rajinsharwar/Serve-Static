@@ -35,7 +35,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
                 'has_addons'          => false,
                 'has_paid_plans'      => false,
                 'menu'                => array(
-                    'slug'           => 'serve_static_guide',
+                    'slug'           => 'serve_static_settings',
                     'first-path'     => 'admin.php?page=serve_static_guide',
                     'account'        => false,
                 ),
@@ -120,40 +120,9 @@ function serve_static_activate( $plugin ) {
 }
 add_action( 'activated_plugin', 'serve_static_activate' );
 
-register_deactivation_hook( __FILE__, 'deactivateServeStatic' );
+register_deactivation_hook( __FILE__, 'serve_static_deactivate' );
 
-// add_action('admin_init', 'deactivateServeStatic');
-// function deactivateServeStatic(){
-
-//     global $wp_filesystem;
-
-//     // Check if the .htaccess file exists
-//     $htaccess_path = ABSPATH . '.htaccess';
-//     if (file_exists($htaccess_path)) {
-//         // Read the content of the .htaccess file
-//         $htaccess_content = $wp_filesystem->get_contents($htaccess_path);
-
-//         // Define the begin and end markers
-//         $begin_marker = '# BEGIN Serve Static Cache';
-//         $end_marker = '# END Serve Static Cache';
-
-//         // Check if the markers exist in the .htaccess content
-//         $begin_pos = strpos($htaccess_content, $begin_marker);
-//         $end_pos = strpos($htaccess_content, $end_marker);
-//         error_log($end_pos);
-
-//         if ($begin_pos !== false && $end_pos !== false) {
-//             // Remove the block of rules from the .htaccess content
-//             $rules_to_remove = substr($htaccess_content, $begin_pos, ($end_pos + strlen($end_marker)) - $begin_pos );
-//             $htaccess_content = str_replace($rules_to_remove, '', $htaccess_content);
-
-//             // Write the modified content back to the .htaccess file
-//             $wp_filesystem->put_contents($htaccess_path, $htaccess_content);
-//         }
-//     }
-// }
-
-function deactivateServeStatic(){
+function serve_static_deactivate(){
 
     global $wp_filesystem;
 

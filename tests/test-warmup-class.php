@@ -33,7 +33,7 @@ class Test_WarmUp_Class extends WP_UnitTestCase {
         $wp_rewrite->flush_rules(true);
         
 		// Instantiate the WarmUp class
-        $this->warmup = new WarmUp();
+        $this->warmup = new ServeStatic\Class\WarmUp();
     }
 
     public function tear_down() {

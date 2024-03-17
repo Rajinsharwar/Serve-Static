@@ -22,7 +22,7 @@ class Test_Cron_Class extends WP_UnitTestCase {
         $_POST['serve_static_cron_time'] = 'hourly';
         
 		// Instantiate the CacheCron class
-        $this->cron = new CacheCron();
+        $this->cron = new ServeStatic\Class\CacheCron();
     }
 
     public function tear_down() {

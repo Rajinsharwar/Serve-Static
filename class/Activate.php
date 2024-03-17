@@ -1,5 +1,7 @@
 <?php
 
+namespace ServeStatic\Class;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
@@ -164,7 +166,7 @@ class Activate
                 </style> 
                 <?php
             } elseif ( $admin_toolbar_parent === 'Serve Static - Cached' ) {
-                $static = new StaticServe();
+                $static = new ServeStatic\Class\StaticServe();
                 if ( $static->is_cache_available( $current_url ) === false ){
                     $admin_toolbar_parent = 'Cached but cache missing'; ?>
                         <style>

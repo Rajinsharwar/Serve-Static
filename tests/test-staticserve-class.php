@@ -29,7 +29,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $wp_rewrite->flush_rules( true );
         
 		// Instantiate the StaticServe class
-        $this->static_serve = new StaticServe();
+        $this->static_serve = new ServeStatic\Class\StaticServe();
     }
 
     public function tear_down() {

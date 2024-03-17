@@ -16,6 +16,8 @@
  * @author     Robert Hafner <tedivm@tedivm.com>
  */
 
+namespace ServeStatic\Class\Minify;
+
 class Minifier {
     /**
      * The input javascript to be minified.

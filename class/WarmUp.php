@@ -1,5 +1,7 @@
 <?php
 
+namespace ServeStatic\Class;
+
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }

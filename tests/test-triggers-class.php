@@ -33,7 +33,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         $wp_rewrite->flush_rules(true);
         
 		// Instantiate the Triggers class
-        $this->triggers = new Triggers();
+        $this->triggers = new ServeStatic\Class\Triggers();
     }
 
     public function tear_down() {

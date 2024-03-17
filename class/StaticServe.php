@@ -1,5 +1,9 @@
 <?php
 
+namespace ServeStatic\Class;
+
+use ServeStatic\Class\Minify\Minifier;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -104,13 +108,13 @@ class StaticServe {
         $critical_css = '';
 
         // Load HTML content into DOMDocument
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         libxml_use_internal_errors(true); // Suppress warnings
         $dom->loadHTML($html);
         libxml_clear_errors();
 
         // XPath query to find elements within the initial viewport
-        $xpath = new DOMXPath($dom);
+        $xpath = new \DOMXPath($dom);
         $viewport_elements = $xpath->query('//*[not(self::script) and not(self::noscript) and not(self::style)][@style or @id or @class][ancestor-or-self::*[@style or @id or @class][contains(@style, "position:fixed") or contains(@style, "position:absolute")]]');
 
         // Extract CSS from matched elements
@@ -133,7 +137,7 @@ class StaticServe {
      */
     public function inline_critical_css($html, $critical_css) {
         // Insert critical CSS into style element in the head
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         $dom->loadHTML($html);
 
         $head = $dom->getElementsByTagName('head')->item(0);
@@ -224,6 +228,7 @@ class StaticServe {
                 ];
                 $js_content = wp_remote_retrieve_body(wp_remote_get($js_url, $context));
                 // $js_content = $this->minifyJS($js_content);
+                // $minifier = new Minifier();
                 $js_content = Minifier::minify($js_content);
 
                 $js_filename = basename($js_url);
