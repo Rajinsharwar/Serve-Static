@@ -267,8 +267,7 @@ class StaticServe {
                     $wp_filesystem->delete($index_file);
                 }
             } else {
-                $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST);
-    
+                $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);    
                 foreach ($iterator as $path) {
                     if ($path->isDir()) {
                         $wp_filesystem->rmdir($path->getPathname(), true);

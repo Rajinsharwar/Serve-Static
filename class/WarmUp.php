@@ -177,7 +177,7 @@ class WarmUp
                 'post_type'   => 'post',
                 'post_status' => 'publish',
             ];
-            $posts_query = new WP_Query( $args );
+            $posts_query = new \WP_Query( $args );
 
             $pagination_format = get_option( 'permalink_structure' ) ? '/page/%d/' : '&paged=%d';
 
