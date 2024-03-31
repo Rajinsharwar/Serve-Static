@@ -12,9 +12,6 @@
             "email": "rajinsharwar@gmail.com"
         }
     ],
-    "require": {
-        "freemius/wordpress-sdk": "^2.6"
-    },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "*",
         "object-calisthenics/phpcs-calisthenics-rules": "*",

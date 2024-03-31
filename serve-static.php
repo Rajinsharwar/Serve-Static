@@ -9,7 +9,7 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
+	exit; // Exit if accessed directly.
 }
 
 // Initialize the WP_Filesystem
@@ -24,7 +24,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
 
         if ( ! isset( $serve_static_analytics ) ) {
 
-            require_once dirname(__FILE__) . '/vendor/freemius/wordpress-sdk/start.php';
+            require_once dirname(__FILE__) . '/inc/start.php';
 
             $serve_static_analytics = fs_dynamic_init( array(
                 'id'                  => '15144',
@@ -99,20 +99,20 @@ require_once __DIR__.'/class/Server.php';
 function serve_static_activate( $plugin ) {
 
     if ( is_network_admin() ) {
-        return false;
-    }
+		return false;
+	}
 
-    // Skip redirect if WP_DEBUG is enabled.
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
-        return false;
-    }
+	// Skip redirect if WP_DEBUG is enabled.
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) {
+		return false;
+	}
 
-    // Determine if multi-activation is enabled.
+	// Determine if multi-activation is enabled.
     if (
-        ( isset( $_REQUEST['action'] ) && 'activate-selected' === $_REQUEST['action'] ) &&
-        ( isset( $_POST['checked'] ) && count( $_POST['checked'] ) > 1 ) ) {
-        return;
-    }
+		( isset( $_REQUEST['action'] ) && 'activate-selected' === $_REQUEST['action'] ) &&
+		( isset( $_POST['checked'] ) && count( $_POST['checked'] ) > 1 ) ) {
+		return;
+	}
     
     if( $plugin == plugin_basename( __FILE__ ) ) {
         exit( wp_safe_redirect(esc_url(admin_url('admin.php?page=serve_static_guide')))); //phpcs:ignore
