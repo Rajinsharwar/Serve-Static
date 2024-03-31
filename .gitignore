@@ -1,5 +1,8 @@
 node_modules/
-/vendor/
 *.cache
 .phpunit.result.cache
 *.result.cache
+/vendor/*
+!/vendor/composer/
+!/vendor/freemius/
+!/vendor/composer/autoload_*.php
