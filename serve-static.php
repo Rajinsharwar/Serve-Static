@@ -24,7 +24,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
 
         if ( ! isset( $serve_static_analytics ) ) {
 
-            require_once dirname(__FILE__) . '/vendor/freemius/wordpress-sdk/start.php';
+            require_once dirname(__FILE__) . '/inc/start.php';
 
             $serve_static_analytics = fs_dynamic_init( array(
                 'id'                  => '15144',

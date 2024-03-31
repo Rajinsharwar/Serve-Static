@@ -33,8 +33,5 @@
         "post-install-cmd": [
             "@install-codestandards"
         ]
-    },
-    "require": {
-        "freemius/wordpress-sdk": "^2.6"
     }
 }
