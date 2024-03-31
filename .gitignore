@@ -4,5 +4,5 @@ node_modules/
 *.result.cache
 /vendor/*
 !/vendor/composer/
-!/vendor/freemius/
+!/vendor/freemius/wordpress-sdk/
 !/vendor/composer/autoload_*.php
