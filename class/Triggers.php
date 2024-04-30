@@ -151,10 +151,10 @@ class Triggers {
     
         ?>
         <div class="notice notice-warning serve-static-notice is-dismissible">
-            <p><?php esc_html_e( 'One or more plugins have been activated or deactivated, or the Theme was changed. Please regenerate the Static Cache if this affects the frontend.', 'serve-static' ); ?></p>
+            <p><?php esc_html_e( 'One or more plugins have been activated or deactivated, or the Theme was changed. Please regenerate the Static Cache if this affects the frontend.', 'serve_static' ); ?></p>
             <p>
-                <a class="button button-primary" href="<?php echo esc_url( $warm_cache_url ); ?>"><?php esc_html_e( 'Regenerate Cache', 'serve-static' ); ?></a>
-                <a class="serve-static-dismiss" href="<?php echo esc_url( add_query_arg( 'serve_static_dismiss_notice', 'true' ) ); ?>"><?php esc_html_e( 'Dismiss', 'serve-static' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( $warm_cache_url ); ?>"><?php esc_html_e( 'Regenerate Cache', 'serve_static' ); ?></a>
+                <a class="serve-static-dismiss" href="<?php echo esc_url( add_query_arg( 'serve_static_dismiss_notice', 'true' ) ); ?>"><?php esc_html_e( 'Dismiss', 'serve_static' ); ?></a>
             </p>
         </div>
         <?php

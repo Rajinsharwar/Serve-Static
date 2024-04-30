@@ -428,7 +428,7 @@ class Activate
                 printf(
                     esc_html__(
                         'I have spent many of my hours with this project so that you can serve a Static website. A %1$s review will motivate me a lot.',
-                        'serve-static'
+                        'serve_static'
                     ),
                     '<a href="' . esc_url( 'https://wordpress.org/support/plugin/serve_static/reviews/?filter=5#new-post' ) . '" target="_blank" style="color: #ffba00;">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
                 );
@@ -649,7 +649,7 @@ class Activate
         ?>
         <div class="notice notice-success is-dismissible">
             <p>
-                <?php esc_html_e('Settings saved.', 'serve-static'); ?>
+                <?php esc_html_e('Settings saved.', 'serve_static'); ?>
             </p>
         </div>
         <?php
@@ -660,7 +660,7 @@ class Activate
         ?>
         <div class="notice notice-success is-dismissible">
             <p>
-                <?php esc_html_e('Cache cleared! Kindly Regenerate the cache to re-build the cache copies. Please note that visiting as and Administrator, Subscriber, or even ot-logged in user won\'t create any cache. Cache can only be generated using the "Regenerate Cache" function.', 'serve-static'); ?>
+                <?php esc_html_e('Cache cleared! Kindly Regenerate the cache to re-build the cache copies. Please note that visiting as and Administrator, Subscriber, or even ot-logged in user won\'t create any cache. Cache can only be generated using the "Regenerate Cache" function.', 'serve_static'); ?>
             </p>
         </div>
         <?php
@@ -675,8 +675,8 @@ class Activate
                     <?php
                     printf(
                         // Translators: Message of Cache regenerating.
-                        esc_html__('Static Cache regeneration in progress... This message will disappear after all the cache is fully generated! Reload the page to check for progress. If you think this process has been stuck for long time, you can %s.', 'serve-static'),
-                        '<a href="' . esc_url(admin_url('admin.php?page=serve_static_settings#stopwarming')) . '">' . esc_html__('stop the Warming by clicking here', 'serve-static') . '</a>'
+                        esc_html__('Static Cache regeneration in progress... This message will disappear after all the cache is fully generated! Reload the page to check for progress. If you think this process has been stuck for long time, you can %s.', 'serve_static'),
+                        '<a href="' . esc_url(admin_url('admin.php?page=serve_static_settings#stopwarming')) . '">' . esc_html__('stop the Warming by clicking here', 'serve_static') . '</a>'
                     );
                     ?>
                 </p>
