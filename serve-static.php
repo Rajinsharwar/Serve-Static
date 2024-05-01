@@ -115,7 +115,7 @@ function serve_static_activate( $plugin ) {
 	}
     
     if( $plugin == plugin_basename( __FILE__ ) ) {
-        exit( wp_safe_redirect(esc_url(admin_url('admin.php?page=serve_static_guide')))); //phpcs:ignore
+        exit( wp_safe_redirect(esc_url(admin_url('admin.php?page=serve_static_settings')))); //phpcs:ignore
     }
 }
 add_action( 'activated_plugin', 'serve_static_activate' );
