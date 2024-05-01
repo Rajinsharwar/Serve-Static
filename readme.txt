@@ -8,7 +8,7 @@ Stable tag: 1.0.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Serve Static is a static HTML page generator WordPress plugin to create and serve static copies of your existing web pages to avoid any PHP/DB load.
+Serve Static is a static HTML page generator WordPress plugin to create and serve static copies of your existing web pages to avoid PHP/DB load.
 
 == Description ==
 
