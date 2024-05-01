@@ -3,6 +3,7 @@ node_modules/
 .phpunit.result.cache
 *.result.cache
 /vendor/*
+/my-local-dir/*
 !/vendor/composer/
 !/vendor/freemius/
 !/vendor/composer/autoload_*.php
