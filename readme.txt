@@ -2,13 +2,13 @@
 Contributors: rajinsharwar
 Tags: Fast, html, static site, static website generator, cache
 Requires at least: 5.0
-Tested up to: 6.4.3
+Tested up to: 6.5.2
 Requires PHP: 7.4
 Stable tag: 1.0.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Serve Static is a static page generator WordPress plugin to create and serve static HTML copies of your existing web pages to avoid any PHP/MySQL load.
+Serve Static is a static HTML page generator WordPress plugin to create and serve static copies of your existing web pages to avoid any PHP/DB load.
 
 == Description ==
 
