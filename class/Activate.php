@@ -53,6 +53,26 @@ class Activate
     public function rules(){
         $begin = '# BEGIN Serve Static Cache';
         $end = '# END Serve Static Cache';
+
+        $site_url = get_site_url();
+
+        // Parse the URL
+        $parsed_url = wp_parse_url($site_url);
+
+        // Check if there is a path component in the URL
+        if(isset($parsed_url['path']) && !empty($parsed_url['path'])) {
+            // Get the folder name from the path
+            $folders = explode('/', trim($parsed_url['path'], '/'));
+            $folder_name = $folders[0]; // Assuming the folder is the first component of the path
+            
+            // Now $folder_name contains the name of the subdirectory (if it exists)
+            $folder = $folder_name;
+        }
+
+        if ( ! isset( $folder ) ) { //If not on sub-folder, then do nothing
+            $folder = '';
+        }
+
         return $rules = [
             $begin,
             'RewriteEngine On',
@@ -62,8 +82,8 @@ class Activate
             'RewriteCond %{REQUEST_URI} !^/wp-admin/ [NC]',
             'RewriteCond %{REQUEST_METHOD} GET',
             'RewriteCond %{QUERY_STRING} ^$ [NC]',
-            'RewriteCond %{DOCUMENT_ROOT}/wp-content/html-cache/$1/index.html -f',
-            'RewriteRule ^(.*)$ /wp-content/html-cache/$1/index.html [L]',
+            'RewriteCond ' . WP_CONTENT_DIR . '/html-cache/' . $folder . '/$1/index.html -f',
+            'RewriteRule ^(.*)$ /' . $folder . '/wp-content/html-cache/' . $folder . '/$1/index.html [L]',
             '',
             $end
         ];
