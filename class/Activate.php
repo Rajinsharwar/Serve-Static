@@ -149,7 +149,8 @@ class Activate
 
             if ( ! is_admin() ){
 
-                $current_url = esc_url_raw( add_query_arg( wp_unslash( $_SERVER['QUERY_STRING'] ), '', home_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) ) );
+                $current_url = 'http' . ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 's' : '' ) . '://' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+
                 if ( get_option('serve_static_master_key') == 0 ){
                     $admin_toolbar_parent = 'Serve Static - Not Cached';
                 } elseif ( get_option(' serve_static_make_static ') == 1 ){
