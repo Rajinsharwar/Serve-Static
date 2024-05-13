@@ -71,15 +71,16 @@ class WarmUp
     public function send_cache_warmup_request($url, $last_url)
     {
         // Send request to $url
-        $this->SendRequest($url, $last_url);
-        error_log('Sent to: ' . $url);
+        if ( $this->SendRequest( $url, $last_url ) ) {
+            error_log('Sent to: ' . $url);
+        }
     }
 
     public function SendRequest(string $url, string $last_url, int $timeout = 50, string $user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', array $cookies = [], array $request_headers = [])
     {
         $request_headers['X-Serve-Static-Request'] = 'true';
         
-        $response = wp_remote_get(
+        $response = wp_safe_remote_get(
             $url,
             [
                 'timeout' => $timeout,
@@ -95,7 +96,8 @@ class WarmUp
         }
 
         if ( ! is_array($response) ){
-            error_log( 'Error while sending wp_remote_get()' );
+            error_log( 'Error while sending wp_safe_remote_get() for: ' . $url );
+            error_log( 'Error: ' . print_r( $response, true ) );
             return false;
         } else {
             return true;

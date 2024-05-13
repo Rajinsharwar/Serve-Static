@@ -106,26 +106,56 @@ class StaticServe {
      */
     public function identify_critical_css($html) {
         $critical_css = '';
-
+    
         // Load HTML content into DOMDocument
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true); // Suppress warnings
         $dom->loadHTML($html);
         libxml_clear_errors();
-
+    
         // XPath query to find elements within the initial viewport
         $xpath = new \DOMXPath($dom);
         $viewport_elements = $xpath->query('//*[not(self::script) and not(self::noscript) and not(self::style)][@style or @id or @class][ancestor-or-self::*[@style or @id or @class][contains(@style, "position:fixed") or contains(@style, "position:absolute")]]');
-
+    
         // Extract CSS from matched elements
         foreach ($viewport_elements as $element) {
-            // Get computed styles for the element
-            $computed_styles = window.getComputedStyle($element);
-
-            // Extract relevant CSS rules from computed styles
-            $critical_css .= $computed_styles->cssText;
+            // Get inline style attribute
+            $inline_style = $element->getAttribute('style');
+    
+            // Append inline style to critical CSS
+            if (!empty($inline_style)) {
+                $critical_css .= $inline_style . "\n";
+            }
+    
+            // Get class attribute and extract CSS rules from classes
+            $classes = $element->getAttribute('class');
+            if (!empty($classes)) {
+                $classes_array = explode(' ', $classes);
+                foreach ($classes_array as $class) {
+                    // Query CSS rules for each class
+                    $class_query = "//*[@class='$class']";
+                    $class_elements = $xpath->query($class_query);
+                    foreach ($class_elements as $class_element) {
+                        $class_style = $class_element->getAttribute('style');
+                        if (!empty($class_style)) {
+                            $critical_css .= $class_style . "\n";
+                        }
+                    }
+                }
+            }
+    
+            // Get ID attribute and extract CSS rules from ID
+            $id = $element->getAttribute('id');
+            if (!empty($id)) {
+                $id_query = "//*[@id='$id']";
+                $id_element = $xpath->query($id_query)->item(0);
+                $id_style = $id_element->getAttribute('style');
+                if (!empty($id_style)) {
+                    $critical_css .= $id_style . "\n";
+                }
+            }
         }
-
+    
         return $critical_css;
     }
 
