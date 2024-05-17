@@ -76,8 +76,13 @@ class StaticServe {
                     $html_content = $this->inline_critical_css($html_content, $critical_css);
 
                     // Save modified HTML content directly to a file
-                    $html_content .= PHP_EOL . "<!-- Cached by Serve Static - https://profiles.wordpress.org/rajinsharwar - Last modified: {$date} -->";
-
+                    if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+                        $html_content .= PHP_EOL . "<!-- Cached by Serve Static from {$html_path}. Current URL: {$current_url} - Last modified: {$date} -->";
+                        $html_content .= PHP_EOL . "<!-- Serve Static: https://wordpress.org/plugins/serve_static/ -->";
+                    } else {
+                        $html_content .= PHP_EOL . "<!-- Cached by Serve Static - Last modified: {$date} -->";
+                        $html_content .= PHP_EOL . "<!-- Serve Static: https://wordpress.org/plugins/serve_static/ -->";
+                    }
                     global $wp_filesystem;
 
                     // Check if the WP_Filesystem is initialized

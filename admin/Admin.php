@@ -78,7 +78,7 @@ class Admin {
                 </br></br>At first, set the Settings in your Serve Static settings page, and Regenerate the Cache. Then, open up the page in an incognito window, for which you enabled the caching.
                 </br></br>If Static Caching is working properly, the page should already be loading blazing fast for you in the incognito window. To completely verify, right click on the webpage, and click "View Page Source".
                 </br></br>Firstly, you should notice very small amount of HTML lines, probably around 10-15 or even less (If you have enabled HTML, CSS and JS minifications together). Secondly, scroll down to the last line of the HTML code, and you should notice something like below:
-                </br><pre style="color:green;">Cached by Serve Static - https://profiles.wordpress.org/rajinsharwar - Last modified: 20XX-XX-XXTXX:XX:XX+XX:XX</pre>
+                </br><pre style="color:green;">Cached by Serve Static</pre>
                 </br>This indicates that the cache is currently being properly cached and served as Static. To fetch that page, not even a single request is made to the PHP, this is being served fully from pure HTML, CSS, and Javascript.
                 </br></br>If this doesn't appear, that means the page is either not cached, or not served form the cache. Kindly regenerate the cache of that page, or try to do a plugin conflict. If the issue still persists, please share in the support forum, and I will try to help you out.
                 </p>
@@ -90,7 +90,7 @@ class Admin {
                 </br></br>Whatever your case might be, to just bypass the cache, simply add the <code>?noserve-static</code> query string to end of the URL. For example, to bypass Serve Static on your homepage, open the website in an incognito window, and use the following:
                 </br><li><?php echo esc_url( get_site_url() ) ?>/?noserve-static</li>
                 </br></br>Or for a specific page:  
-                </br></br><li><?php echo esc_url( get_site_url() ) ?>/about-us/?nowprocket</li>
+                </br></br><li><?php echo esc_url( get_site_url() ) ?>/about-us/?noserve-static</li>
                 </br></br>This should show you a version of your page, which is not served from the Serve-Static cache. If you find any issue, feel free to report it to me via the support forum, so that I can try releasing a fix for it.
                 </p>
             </section>
