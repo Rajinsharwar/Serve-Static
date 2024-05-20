@@ -21,7 +21,7 @@ class WarmerAdmin {
             </br>
             <?php if( $master_key == 0 || $master_key === false ) { ?>
             </br>
-            <div style="background-color: red; color: white; text-align: center; padding: 20px;">
+            <div style="background-color: #900000; color: white; text-align: center; padding: 20px;">
                 <b>Kindly enable the Plugin Functionality from Serve Static > Settings > Enable Plugin Functionality</b>
             </div>
             </br>
