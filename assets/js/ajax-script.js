@@ -100,9 +100,14 @@ jQuery(document).ready(function ($) {
           }, ajax_object.time_interval * 1000); // Pause for X seconds
         },
         error: function (error) {
-          newRow
-            .find("td:last")
-            .text("An error occurred while processing the request."); // Update status
+          var error_message = `<span class="info-icon">\
+              <i class="fa fa-info-circle"></i>\
+              <span class="tooltip-text" style="color: red;"><b>${error.status}</b></span>\
+            </span>`;
+          console.log(error.status);
+
+          newRow.find("td:last").html(error_message);
+
           failedRequestsCount++; // Increment failed requests counter
 
           // Process the next URL even if there's an error
