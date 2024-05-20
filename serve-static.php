@@ -36,7 +36,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
                 'has_paid_plans'      => false,
                 'menu'                => array(
                     'slug'           => 'serve_static_settings',
-                    'first-path'     => 'admin.php?page=serve_static_settings',
+                    'first-path'     => 'admin.php?page=serve_static_warmer',
                     'account'        => false,
                 ),
             ) );
@@ -90,8 +90,10 @@ WP_Filesystem();
 
 require_once __DIR__.'/class/Activate.php';
 require_once __DIR__.'/admin/Admin.php';
+require_once __DIR__.'/admin/Warmer.php';
 require_once __DIR__.'/class/StaticServe.php';
 require_once __DIR__.'/class/WarmUp.php';
+require_once __DIR__.'/class/WarmUpAjax.php';
 require_once __DIR__.'/class/Triggers.php';
 require_once __DIR__.'/class/Cron.php';
 require_once __DIR__.'/class/Server.php';
@@ -120,6 +122,32 @@ function serve_static_activate( $plugin ) {
 }
 add_action( 'activated_plugin', 'serve_static_activate' );
 
+// Register Custom DB table.
+add_action( 'activated_plugin', 'serve_static_create_database_tables' );
+
+function serve_static_create_database_tables( $plugin ) {
+
+    if( $plugin != plugin_basename( __FILE__ ) ) {
+        return;
+    }
+
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'serve_static_warm_logs';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        log_url text NOT NULL,
+        log_status text NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( $sql );
+}
+
+
+//Deactivation Hook.
 register_deactivation_hook( __FILE__, 'serve_static_deactivate' );
 
 function serve_static_deactivate(){

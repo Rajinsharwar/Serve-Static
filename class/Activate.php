@@ -129,7 +129,7 @@ class Activate
     public function Admin()
     {
         add_menu_page( __( 'Settings', 'serve-static' ), 'Serve Static', 'manage_options', 'serve_static_settings', false, 'dashicons-schedule');
-        add_submenu_page( 'serve_static_settings', 'Settings', 'Settings', 'manage_options', 'serve_static_settings', array($this, 'SettingsPage') );
+        add_submenu_page( 'serve_static_settings', 'Settings', 'Settings', 'manage_options', 'serve_static_settings', array($this, 'SettingsPage'), 3 );
     }
 
     public function AddToolbarMenu()
@@ -141,11 +141,11 @@ class Activate
             $is_cache_warming_in_progress = get_transient('serve_static_cache_warming_in_progress');
 
             // Define the base URL
-            $base_url = admin_url('admin.php?page=serve_static_settings');
+            $base_url = admin_url('admin.php?page=serve_static_warmer');
 
             // Define the final URLs based on the presence of the transient
             $flush_cache_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url($base_url . '&action=flush_cache', 'serve_static_flush_cache', '_wpnonce', 10);
-            $warm_cache_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url($base_url . '&action=warm_cache', 'serve_static_warm_cache', '_wpnonce', 10);
+            $warm_cache_url = $base_url;
 
             if ( ! is_admin() ){
 
@@ -217,7 +217,7 @@ class Activate
             );
 
             if ( ! is_admin() ) {
-                $flush_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url(admin_url('admin-post.php?action=flush_url&url=' . urlencode($current_url)), 'serve_static_flush_url_action', 'flush_url_nonce');
+                $flush_url = $is_cache_warming_in_progress ? $current_url : wp_nonce_url(admin_url('admin-post.php?action=flush_url&url=' . urlencode($current_url)), 'serve_static_flush_url_action', 'flush_url_nonce');
                 // Add the admin bar menu item
                 $wp_admin_bar->add_menu(array(
                     'parent' => 'serve_static_cache_size',
@@ -247,16 +247,16 @@ class Activate
                 )
             );
 
-            if ( get_transient('serve_static_cache_warming_in_progress') ){
-                $wp_admin_bar->add_menu(
-                    array(
-                        'parent' => 'serve_static_cache_size', // Attach to the cache size menu item
-                        'id' => 'serve_static_stop_warming',
-                        'title' => 'Stop Cache Regeneration',
-                        'href' => esc_url(admin_url('admin.php?page=serve_static_settings#stopwarming')),
-                    )
-                );
-            }
+            // if ( get_transient('serve_static_cache_warming_in_progress') ){
+            //     $wp_admin_bar->add_menu(
+            //         array(
+            //             'parent' => 'serve_static_cache_size', // Attach to the cache size menu item
+            //             'id' => 'serve_static_stop_warming',
+            //             'title' => 'Stop Cache Regeneration',
+            //             'href' => esc_url(admin_url('admin.php?page=serve_static_settings#stopwarming')),
+            //         )
+            //     );
+            // }
         }
     }
 
@@ -289,7 +289,7 @@ class Activate
         ]);
         $master_key = get_option('serve_static_master_key', false);
         $always_exclude_urls = get_option( 'serve_static_exclude_urls', array() );
-        $warm_on_save = get_option('serve_static_warm_on_save', false);
+        $requests_interval = get_option( 'serve_static_requests_interval', 0 );
 
         ?>
         <div class="wrap">
@@ -381,6 +381,15 @@ class Activate
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Cache Warmup Requests Interval</th>
+                        <td>
+                        <label>
+                            <input id="serve_static_requests_interval" name="serve_static_requests_interval" type="number" value="<?php echo (int) $requests_interval ?>">
+                            <p>Seconds you want as interval for every cache warmup requests. If you have a very low config server, please use 2 seconds or more. </br>Or else, you can set it to 1, or just leave empty. <a href="<?php echo esc_url(admin_url('admin.php?page=serve_static_guide#interval-per-requests')) ?>">Learn More</a></p>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row">Cron Time</th>
                         <td>
                             <select name="serve_static_cron_time" id="serve_static_cron_time">
@@ -394,22 +403,9 @@ class Activate
                             <p>Select cron time to Flush and regenerate cache on a regular basis. <a href="<?php echo esc_url(admin_url('admin.php?page=serve_static_guide#cron-time')) ?>">Learn More</a></p>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">Flush & Warm on Save</th>
-                        <td>
-                            <label>
-                                <input type="checkbox" name="serve_static_warm_on_save" <?php checked($warm_on_save, true); ?>>
-                                Flush and Regenerate cache on Save
-                                <p>Check this option if you want to Flush and Save the Cache each time you Save the Settings of the plugin <a href="<?php echo esc_url(admin_url('admin.php?page=serve_static_guide#flush-warm-on-save')) ?>">Learn More</a></p>
-                            </label>
-                        </td>
-                    </tr>
                 </table>
-                <?php
-                $is_disabled = !empty($warming_in_progress) ? 'disabled' : '';
-                ?>
                 <p>
-                    <input type="submit" name="submit" class="button button-primary" value="Save Settings" <?php echo esc_attr($is_disabled); ?>>
+                    <input type="submit" name="submit" class="button button-primary" value="Save Settings">
                 </p>
             </form>
             <script>
@@ -485,20 +481,23 @@ class Activate
                 update_option('serve_static_master_key', 0);
             }
 
-            // Sanitize and save entry type
+            /** Sanitize and save entry type. */
+
+            // Manual.
             if (isset($_POST['serve_static_entry_type']) && $_POST['serve_static_entry_type'] === 'manual') {
                 update_option('serve_static_manual_entry', 1);
                 update_option('serve_static_make_static', 0);
                 update_option('serve_static_post_types_static', 0);
             }
 
+            // All URLs.
             if (isset($_POST['serve_static_entry_type']) && $_POST['serve_static_entry_type'] === 'all') {
                 update_option('serve_static_make_static', 1);
                 update_option('serve_static_manual_entry', 0);
                 update_option('serve_static_post_types_static', 0);
-                $warmupnow = 1;
             }
 
+            // Specific Post types.
             if (isset($_POST['serve_static_entry_type']) && $_POST['serve_static_entry_type'] === 'post_types') {
                 update_option('serve_static_post_types_static', 1);
                 update_option('serve_static_make_static', 0);
@@ -518,7 +517,6 @@ class Activate
                 }
 
                 update_option('serve_static_specific_post_types', $postTypesFormatted);
-                $warmupnow = 1;
             }
 
             // Save minification options
@@ -555,14 +553,10 @@ class Activate
             
                     // Update the option with the formatted array
                     update_option('serve_static_urls', $urls_formatted);
-            
-                    $warmupnow = 1;
+
                 }
             }
-            
-            if (isset($_POST['serve_static_html_minify_enabled']) || isset($_POST['serve_static_css_minify_enabled']) || isset($_POST['serve_static_js_minify_enabled'])) {
-                $warmupnow = 1;
-            }
+
 
             //Exclude urls.
             if (isset($_POST['serve_static_exclude_urls'])) {
@@ -587,32 +581,18 @@ class Activate
             
                 // Update the option with the formatted array
                 update_option('serve_static_exclude_urls', $excluded_urls_formatted);
-                $warmupnow = 1;
             } 
 
-            // Save the value of "Flush and Warm cache on Save" checkbox
-            if ( isset($_POST['serve_static_warm_on_save']) ){
-                update_option('serve_static_warm_on_save', 1);
-            } else {
-                $warmupnow = 0;
-                update_option('serve_static_warm_on_save', 0);
-            }
-
-            if (isset($warmupnow) && $warmupnow == 1) {
-                // Schedule warmup and flush rewrite rules
-                $flush = new StaticServe();
-                $flush->Flush();
-
-                $warmup = new WarmUp();
-                $warmup->ScheduleWarmup();
-                // flush_rewrite_rules();
+            // Save the value of "Cache Warmup Requests Interval" numberbox.
+            if ( isset( $_POST[ 'serve_static_requests_interval' ] ) ){
+                update_option( 'serve_static_requests_interval', (int) $_POST[ 'serve_static_requests_interval' ] );
             }
 
             // Show success notice
             add_action('admin_notices', array($this, 'AdminSuccessSaved'));
         }
 
-        //Flush URL Cache.
+        //Warm URL Cache from Admin Toolbar Single Page.
         if (isset($_GET['action']) && $_GET['action'] === 'flush_url' && isset($_GET['flush_url_nonce'])) {
             
             $nonce = isset( $_GET['flush_url_nonce'] ) ? sanitize_key( $_GET['flush_url_nonce'] ) : '';
@@ -647,7 +627,7 @@ class Activate
             add_action('admin_notices', array($this, 'AdminSuccessCacheCleared'));
         }
 
-        //Warm Cache.
+        //Warm Cache from Admin Toolbar.
         if (isset($_GET['action']) && $_GET['action'] === 'warm_cache' && isset($_GET['_wpnonce'])) {
             $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
 
@@ -696,7 +676,7 @@ class Activate
                     <?php
                     printf(
                         // Translators: Message of Cache regenerating.
-                        esc_html__('Static Cache regeneration in progress... This message will disappear after all the cache is fully generated! Reload the page to check for progress. If you think this process has been stuck for long time, you can %s.', 'serve_static'),
+                        esc_html__('Static Cache regeneration in progress... This message will disappear after its done! Reload the page to check for progress. If you think this process has been stuck for long time, you can %s.', 'serve_static'),
                         '<a href="' . esc_url(admin_url('admin.php?page=serve_static_settings#stopwarming')) . '">' . esc_html__('stop the Warming by clicking here', 'serve_static') . '</a>'
                     );
                     ?>

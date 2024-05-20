@@ -71,7 +71,8 @@ class WarmUp
     public function send_cache_warmup_request($url, $last_url)
     {
         // Send request to $url
-        if ( $this->SendRequest( $url, $last_url ) ) {
+        $response = $this->SendRequest( $url, $last_url );
+        if ( true === $response && ! is_string( $response ) ) {
             error_log('Sent to: ' . $url);
         }
     }
@@ -95,10 +96,11 @@ class WarmUp
             delete_transient('serve_static_cache_warming_in_progress');
         }
 
-        if ( ! is_array($response) ){
+        if ( ! is_array($response) ){ // Returns WP_ERROR on failure.
             error_log( 'Error while sending wp_safe_remote_get() for: ' . $url );
             error_log( 'Error: ' . print_r( $response, true ) );
-            return false;
+            $error = is_wp_error( $response ) ? $response->get_error_message() : 'Null';
+            return $error;
         } else {
             return true;
         }

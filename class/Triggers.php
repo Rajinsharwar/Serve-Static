@@ -142,12 +142,9 @@ class Triggers {
     }
     
     public function show_plugins_modified_notice() {
-        $is_cache_warming_in_progress = get_transient('serve_static_cache_warming_in_progress');
     
-        // Define the base URL
-        $base_url = admin_url('admin.php?page=serve_static_settings');
-    
-        $warm_cache_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url($base_url . '&action=warm_cache', 'serve_static_warm_cache', '_wpnonce', 10);
+        // Define the Warm Cache URL.
+        $warm_cache_url = admin_url('admin.php?page=serve_static_warmer');
     
         ?>
         <div class="notice notice-warning serve-static-notice is-dismissible">
