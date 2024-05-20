@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Serve Static
  * Description: Cache and serve HTML copies of your webpages. Avoid the PHP hit on any page load, and deploy pages fully static on your server.
- * Version: 1.0.4
+ * Version: 1.1
  * Author: Rajin Sharwar
  * Author URI: https://linkedin.com/in/rajinsharwar
  * License: GPLv2
