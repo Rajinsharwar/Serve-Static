@@ -12,7 +12,7 @@ class WarmerAdmin {
         add_submenu_page( 'serve_static_settings', 'Cache Generator', 'Cache Generator', 'manage_options', 'serve_static_warmer', array( $this, 'warmer_callback'), 0);
     }
 
-    public function warmer_callback(){ 
+    public function warmer_callback(){
         $master_key = get_option('serve_static_master_key', false);
         $is_disabled = $master_key == 1 ? '' : 'disabled';
         ?>
@@ -28,6 +28,12 @@ class WarmerAdmin {
             <?php } ?>
             <button id="serve-static-send-requests-button" class="action-button" <?php echo esc_attr($is_disabled); ?> >Create Cache Files</button>
             </br>
+            <div id="serve-static-request-progress-container" class="serve-static-notification" style="display: none;">
+                <div id="serve-static-request-progress-bar-container">
+                    <div id="serve-static-request-progress-bar" style="width: 0%;"></div>
+                </div>
+                <div id="serve-static-request-progress-text">In Progress.... Done: 0/0</div>
+            </div>
             <div id="serve-static-request-success" class="serve-static-notification serve-static-success">
                 <?php
                     $warmup_ajax = new WarmUpAjax;
@@ -67,7 +73,23 @@ class WarmerAdmin {
                 </table>
             </div>
         </div>
-    <?php }
+    <?php 
+        // Warm Cache from Admin Toolbar.
+        if (isset($_GET['action']) && $_GET['action'] === 'warm_cache' && isset($_GET['_wpnonce'])) {
+            $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
+
+            if (wp_verify_nonce($nonce, 'serve_static_warm_cache')) {
+                // Inject JavaScript to auto-click the button
+                ?>
+                <script type="text/javascript">
+                    setTimeout(() => {
+                        document.getElementById("serve-static-send-requests-button").click();
+                    }, 500 );
+                </script>
+                <?php
+            }
+        }
+    }
 
     public function warmer_remove_admin_notices() {
 

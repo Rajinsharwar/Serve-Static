@@ -137,15 +137,13 @@ class Activate
         if (current_user_can('manage_options')) {
 
             global $wp_admin_bar;
-            // Check if the transient is set
-            $is_cache_warming_in_progress = get_transient('serve_static_cache_warming_in_progress');
 
             // Define the base URL
             $base_url = admin_url('admin.php?page=serve_static_warmer');
 
             // Define the final URLs based on the presence of the transient
-            $flush_cache_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url($base_url . '&action=flush_cache', 'serve_static_flush_cache', '_wpnonce', 10);
-            $warm_cache_url = $base_url;
+            $flush_cache_url = wp_nonce_url($base_url . '&action=flush_cache', 'serve_static_flush_cache', '_wpnonce', 10);
+            $warm_cache_url = wp_nonce_url($base_url . '&action=warm_cache', 'serve_static_warm_cache', '_wpnonce', 10);
 
             if ( ! is_admin() ){
 
@@ -217,7 +215,7 @@ class Activate
             );
 
             if ( ! is_admin() ) {
-                $flush_url = $is_cache_warming_in_progress ? $current_url : wp_nonce_url(admin_url('admin-post.php?action=flush_url&url=' . urlencode($current_url)), 'serve_static_flush_url_action', 'flush_url_nonce');
+                $flush_url = wp_nonce_url(admin_url('admin-post.php?action=flush_url&url=' . urlencode($current_url)), 'serve_static_flush_url_action', 'flush_url_nonce');
                 // Add the admin bar menu item
                 $wp_admin_bar->add_menu(array(
                     'parent' => 'serve_static_cache_size',
@@ -288,6 +286,7 @@ class Activate
             'post' => 'post'
         ]);
         $master_key = get_option('serve_static_master_key', false);
+        $fallback_method = get_option('serve_static_fallback_method', false);
         $always_exclude_urls = get_option( 'serve_static_exclude_urls', array() );
         $requests_interval = get_option( 'serve_static_requests_interval', 0 );
 
@@ -387,6 +386,16 @@ class Activate
                             <input id="serve_static_requests_interval" name="serve_static_requests_interval" type="number" value="<?php echo (int) $requests_interval ?>">
                             <p>Seconds you want as interval for every cache warmup requests. If you have a very low config server, please use 2 seconds or more. </br>Or else, you can set it to 1, or just leave empty. <a href="<?php echo esc_url(admin_url('admin.php?page=serve_static_guide#interval-per-requests')) ?>">Learn More</a></p>
                         </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Fallback method</th>
+                        <td>
+                            <label>
+                                <input type="checkbox" name="serve_static_fallback_method" <?php checked($fallback_method, true); ?>>
+                                Fallback method for serving cache
+                                </br><p><i> (Not Recommended) Check this button only if the HTML cache is not served properly for your server, or if <i>.htaccess</i> modifications are not working. </br></i> This option will use a PHP fallback method for serving the cache. <a href="<?php echo esc_url(admin_url('admin.php?page=serve_static_guide#fallback-method')) ?>">Learn More</a></p>
+                            </label>
                         </td>
                     </tr>
                     <tr>
@@ -588,6 +597,13 @@ class Activate
                 update_option( 'serve_static_requests_interval', (int) $_POST[ 'serve_static_requests_interval' ] );
             }
 
+            // Save the value of Fallback method.
+            if ( isset( $_POST[ 'serve_static_fallback_method' ] ) ) {
+                update_option('serve_static_fallback_method', 1);
+            } else {
+                update_option('serve_static_fallback_method', 0);
+            }
+
             // Show success notice
             add_action('admin_notices', array($this, 'AdminSuccessSaved'));
         }
@@ -625,22 +641,6 @@ class Activate
 
         if (isset($_GET['action']) && $_GET['action'] === 'flush_cache') {
             add_action('admin_notices', array($this, 'AdminSuccessCacheCleared'));
-        }
-
-        //Warm Cache from Admin Toolbar.
-        if (isset($_GET['action']) && $_GET['action'] === 'warm_cache' && isset($_GET['_wpnonce'])) {
-            $nonce = sanitize_text_field(wp_unslash($_GET['_wpnonce']));
-
-            if (wp_verify_nonce($nonce, 'serve_static_warm_cache')) {
-
-                $flush = new StaticServe();
-                $flush->Flush();
-
-                $warmup = new WarmUp();
-                $warmup->ScheduleWarmup();
-                flush_rewrite_rules();
-            }
-            wp_safe_redirect(admin_url('admin.php?page=serve_static_settings&action=warm_cache'));
         }
 
     }

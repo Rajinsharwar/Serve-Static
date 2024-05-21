@@ -572,6 +572,30 @@ class StaticServe {
             return false;
         }
     }
+
+    public function use_fallback_method(){
+        if ( get_option( 'serve_static_fallback_method' ) != 1 ) {
+            return;
+        }
+
+        // Allow only GET requests with empty query strings
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !empty($_SERVER['QUERY_STRING'])) {
+            return;
+        }
+
+        // Get the current request URI
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        // Construct the path to the cached file
+        $cache_path = WP_CONTENT_DIR . '/html-cache' . $request_uri . '/index.html';
+
+        // Check if the cached file exists
+        if ( file_exists( $cache_path ) ) {
+            // Serve the cached file
+            readfile( $cache_path );
+            exit;
+        }
+    }
 }
 
 require_once( ABSPATH . '/wp-includes/pluggable.php' );
@@ -580,4 +604,8 @@ $static = new StaticServe();
 
 if ( ! is_admin() && ! is_user_logged_in() && ! strpos($_SERVER['REQUEST_URI'], 'elementor') !== false && get_option('serve_static_master_key', '') != '' && get_option( 'serve_static_master_key' ) == 1 ){
     add_action('template_redirect', array( $static, 'Build' ));
+}
+
+if ( ! is_user_logged_in() && ! is_admin() ) { // Bail out early for logged in users, and admins.
+    add_action('template_redirect', array( $static, 'use_fallback_method' ));
 }

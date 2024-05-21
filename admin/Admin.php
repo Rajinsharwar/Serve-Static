@@ -45,6 +45,7 @@ class Admin {
                 <li><a href="#minification">Minification</a></li>
                 <li><a href="#always-exclude-urls">Always Exclude URLs</a></li>
                 <li><a href="#interval-per-requests">Cache Warmup Requests Interval</a></li>
+                <li><a href="#fallback-method">Fallback Method</a></li>
                 <li><a href="#cron-time">Cron Time</a></li>
             </ul>
 
@@ -149,6 +150,11 @@ class Admin {
             <section id="interval-per-requests">
                 <h2>Cache Warmup Requests Interval</h2>
                 <p>The number of seconds you want to delay each WarmUp requests. Warmup requests use server resources, so one with a low config server might choose to go with a higher value, so that the server is not overloaded by reqesusts. Or else, it is okay to keep the value at 1, or just empty.</p>
+            </section>
+
+            <section id="fallback-method">
+                <h2>Fallback method</h2>
+                <p>By default, this plugin uses <i> .htaccess </i> modifications to serve the static HTMl files. This is the most recommended way, as this doesn't need to load WordPress core or files at all. But in any case, if in your server the <i> .htaccess </i> modifications are not working, or the static cache is not working properly on your frontend, you can enable this Fallback option. Enabling this option will result in using PHP to serve the Static cache, which means, WordPress files and Core will be loaded before the Static files are served. This may result in less performance optimization, still you will notice an positive impact on your loading speed. Yet, for the best performance, please get in touch with your hosting provider to check why the custom <i> .htaccess </i> rules are not working, or open a support thread in the Support Forum of this plugin. Please only use this as the last resort. </p>
             </section>
 
             <section id="cron-time">

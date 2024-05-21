@@ -1,5 +1,18 @@
+// Flag to track unsaved changes for showing anti-reload prompt
+var unsavedChanges = true;
+
 jQuery(document).ready(function ($) {
   $("#serve-static-send-requests-button").on("click", function () {
+    window.addEventListener("beforeunload", function (e) {
+      if (unsavedChanges) {
+        // Display confirmation message
+        var confirmationMessage =
+          "You have unsaved changes. Are you sure you want to leave?";
+        (e || window.event).returnValue = confirmationMessage; // For legacy browsers
+        return confirmationMessage; // For modern browsers
+      }
+    });
+
     $("#serve-static-request-table tbody").empty(); // Clear the status table.
     $("#serve-static-request-success").empty(); // Clear the status table.
     var button = document.getElementById("serve-static-send-requests-button");
@@ -20,10 +33,10 @@ jQuery(document).ready(function ($) {
       success: function (response) {
         if (response.success) {
           $("#serve-static-request-success").empty(); // Clear the "Getting URLS.."
-          $("#serve-static-request-success").append(
-            "<p>In Progress.... </br>Please avoid reloading or deleting or navigating away from this window. Instead, you can open a new Tab, and use the WordPress Admin Dashboard.</p>"
-          );
           let urls = response.data.urls;
+          $("#serve-static-request-success").append(
+            `<p>Please avoid reloading or deleting or navigating away from this window. Instead, you can open a new Tab, and use the WordPress Admin Dashboard.</p>`
+          );
           sendRequestSequentially(urls, 0);
         } else {
           $("#serve-static-request-status").append(
@@ -35,18 +48,43 @@ jQuery(document).ready(function ($) {
         $("#serve-static-request-status").append(
           "<p>An error occurred while fetching the URLs.</p>"
         );
+        console.log(error);
       },
     });
 
     function sendRequestSequentially(urls, index) {
+      // Progress Bar
+      $("#serve-static-request-progress-container").css("display", "");
+      var progress = Math.round((index / urls.length) * 100);
+      $("#serve-static-request-progress-bar").css("width", progress + "%");
+
+      $("#serve-static-request-progress-text").text(
+        `In Progress.... Done: ${index}/${urls.length}`
+      );
+
+      $("#serve-static-request-progress-bar").css(
+        "background-color",
+        "#76c7c0"
+      ); // Keep blue BG on progress bar.
+
       if (index >= urls.length) {
         $("#serve-static-request-success").empty(); // Clear the "In Progress..."
+
+        // Show all done message
+        $("#serve-static-request-progress-text").text(`All Done!`);
+        $("#serve-static-request-progress-bar").css(
+          "background-color",
+          "#0eff53"
+        ); // Green BG after Done.
+
+        // Display failed requests count
         $("#serve-static-request-success").append(
-          `<p style="color: green;"><b>All Done...</b></p>`
-        ); // Show all done message
-        $("#serve-static-request-success").append(
-          `<p class="error">Failed requests: ${failedRequestsCount}</p>` // Display failed requests count
+          `<p class="error">Failed requests: ${failedRequestsCount}</p>`
         );
+
+        // Remove the unSaved flag.
+        unsavedChanges = false;
+
         // Save the failed requests count in the database
         $.ajax({
           url: ajax_object.ajax_url,

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Serve Static
  * Description: Cache and serve HTML copies of your webpages. Avoid the PHP hit on any page load, and deploy pages fully static on your server.
- * Version: 1.1
+ * Version: 2.0
  * Author: Rajin Sharwar
  * Author URI: https://linkedin.com/in/rajinsharwar
  * License: GPLv2
@@ -123,14 +123,9 @@ function serve_static_activate( $plugin ) {
 add_action( 'activated_plugin', 'serve_static_activate' );
 
 // Register Custom DB table.
-add_action( 'activated_plugin', 'serve_static_create_database_tables' );
+register_activation_hook(__FILE__, 'serve_static_create_database_tables');
 
-function serve_static_create_database_tables( $plugin ) {
-
-    if( $plugin != plugin_basename( __FILE__ ) ) {
-        return;
-    }
-
+function serve_static_create_database_tables() {
     global $wpdb;
     $table_name = $wpdb->prefix . 'serve_static_warm_logs';
     $charset_collate = $wpdb->get_charset_collate();

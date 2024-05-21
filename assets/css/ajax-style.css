@@ -86,3 +86,24 @@
   cursor: not-allowed;
   border: 1px solid #999999;
 }
+
+/* Progress Bar */
+#serve-static-request-progress-bar-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 20px;
+  margin-bottom: 10px;
+}
+
+#serve-static-request-progress-bar {
+  height: 100%;
+  background-color: #76c7c0; /* Adjust this to your desired progress bar color */
+  width: 0;
+  transition: width 0.4s ease;
+}
+
+#serve-static-request-progress-text {
+  font-size: 18px;
+}
