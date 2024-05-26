@@ -97,6 +97,7 @@ require_once __DIR__.'/class/WarmUpAjax.php';
 require_once __DIR__.'/class/Triggers.php';
 require_once __DIR__.'/class/Cron.php';
 require_once __DIR__.'/class/Server.php';
+require_once __DIR__.'/class/Migrate.php';
 
 function serve_static_activate( $plugin ) {
 
@@ -141,10 +142,6 @@ function serve_static_create_database_tables() {
     dbDelta( $sql );
 }
 
-
-//Deactivation Hook.
-register_deactivation_hook( __FILE__, 'serve_static_deactivate' );
-
 function serve_static_deactivate(){
 
     global $wp_filesystem;
@@ -180,3 +177,6 @@ function serve_static_deactivate(){
         }
     }
 }
+
+//Deactivation Hook.
+register_deactivation_hook( __FILE__, 'serve_static_deactivate' );

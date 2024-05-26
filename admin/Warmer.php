@@ -96,7 +96,7 @@ class WarmerAdmin {
         $current_url = 'http' . ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 's' : '' ) . '://' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) );
         $base_url = admin_url('admin.php?page=serve_static_warmer');
 
-        if ( $base_url === $current_url ) {
+        if ( false !== strpos( $current_url, $base_url ) ) {
             remove_all_actions( 'admin_notices' );
             remove_all_actions( 'all_admin_notices' );
         }

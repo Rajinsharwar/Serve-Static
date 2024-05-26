@@ -40,6 +40,7 @@ class WarmUpAjax {
         delete_option( 'serve_static_log_all_done' );
         delete_option( 'serve_statis_failed_requests_count' );
         delete_transient( 'serve_static_plugin_modified_notice' ); // Delete the Regenerate cache nag.
+        delete_transient( 'serve_static_db_is_updated_notice' ); // Delete the Regenerate cache nag after DB update.
 
         if ( is_array( $frontend_urls ) ) {
             wp_send_json_success( ['urls' => $frontend_urls ] );

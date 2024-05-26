@@ -71,6 +71,12 @@ class Activate
 
         if ( ! isset( $folder ) ) { //If not on sub-folder, then do nothing
             $folder = '';
+        } else {
+            $folder = '/' . $folder;
+        }
+
+        if ( ! defined( 'WP_CONTENT_FOLDERNAME' ) ){
+            define( 'WP_CONTENT_FOLDERNAME', 'wp-content' );
         }
 
         return $rules = [
@@ -82,8 +88,8 @@ class Activate
             'RewriteCond %{REQUEST_URI} !^/wp-admin/ [NC]',
             'RewriteCond %{REQUEST_METHOD} GET',
             'RewriteCond %{QUERY_STRING} ^$ [NC]',
-            'RewriteCond ' . WP_CONTENT_DIR . '/html-cache/' . $folder . '/$1/index.html -f',
-            'RewriteRule ^(.*)$ /' . $folder . '/wp-content/html-cache/' . $folder . '/$1/index.html [L]',
+            'RewriteCond ' . WP_CONTENT_DIR . '/html-cache' . $folder . '/$1/index.html -f',
+            'RewriteRule ^(.*)$ ' . $folder . '/' . WP_CONTENT_FOLDERNAME . '/html-cache' . $folder . '/$1/index.html [L]',
             '',
             $end
         ];
