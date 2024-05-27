@@ -303,8 +303,8 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $htaccess_content = '# .htaccess content';
 
         // Write content to the file
-        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
-        $this->assertIsInt($wp_filesystem->put_contents($htaccess_path, $htaccess_content));
+        $this->assertTrue($wp_filesystem->put_contents($file_path, $file_content));
+        $this->assertTrue($wp_filesystem->put_contents($htaccess_path, $htaccess_content));
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
 
@@ -362,7 +362,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
+        $this->assertTrue($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertFalse($this->static_serve->is_cache_available(get_site_url() . '/blog'));
         $this->static_serve->Flush();
@@ -384,7 +384,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
+        $this->assertTrue($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertTrue($this->static_serve->is_cache_available(get_site_url() . '/blog'));
         $this->static_serve->Flush();
