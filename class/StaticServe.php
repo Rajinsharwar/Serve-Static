@@ -304,6 +304,10 @@ class StaticServe {
             } else {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);    
                 foreach ($iterator as $path) {
+                    // Skip .htaccess file
+                    if ($path->getFilename() === '.htaccess') {
+                        continue;
+                    }
                     if ($path->isDir()) {
                         $wp_filesystem->rmdir($path->getPathname(), true);
                     } else {
@@ -313,7 +317,6 @@ class StaticServe {
             }
         }
     
-        delete_transient('serve_static_cache_warming_in_progress', true);
     }
 
     /**

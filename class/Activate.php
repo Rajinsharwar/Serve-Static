@@ -42,8 +42,24 @@ class Activate
 
             // Create a directory for storing HTML copies
             $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
-            if (!$wp_filesystem->is_dir($cache_dir)) {
-                $wp_filesystem->mkdir($cache_dir, 0755, true);
+            if ( ! $wp_filesystem->is_dir( $cache_dir ) ) {
+                $wp_filesystem->mkdir( $cache_dir, 0755, true );
+
+                // Add the .htaccess for the serve-static-cache folder.
+                $serve_static_htaccess_file = $wp_filesystem->get_contents( $cache_dir . '.htaccess' );
+
+                $cache_htaccess_rules = [
+                    'RewriteEngine On',
+                    'RewriteRule \.html$ - [F]'
+                ];
+                $cache_htaccess = implode(PHP_EOL, $cache_htaccess_rules) . PHP_EOL . $serve_static_htaccess_file;
+
+                $cache_htaccess = $wp_filesystem->put_contents($cache_dir . '/' . '.htaccess', $cache_htaccess, FS_CHMOD_FILE);
+                if ( ! isset($cache_htaccess) || $cache_htaccess != 1 ){
+                    set_transient( 'serve_static_htaccess_not_writable', 1 );
+                } elseif ( $cache_htaccess == 1 ) {
+                    delete_transient( 'serve_static_htaccess_not_writable' );
+                }
             }
 
             flush_rewrite_rules();
@@ -667,7 +683,7 @@ class Activate
         ?>
         <div class="notice notice-success is-dismissible">
             <p>
-                <?php esc_html_e('Cache cleared! Kindly Regenerate the cache to re-build the cache copies. Please note that visiting as and Administrator, Subscriber, or even ot-logged in user won\'t create any cache. Cache can only be generated using the "Regenerate Cache" function.', 'serve_static'); ?>
+                <?php esc_html_e('Cache cleared! Kindly Regenerate the cache to re-build the cache copies. Please note that visiting as a Subscriber, or not-logged in user won\'t create any cache. Cache can only be generated using the "Regenerate Cache" button.', 'serve_static'); ?>
             </p>
         </div>
         <?php

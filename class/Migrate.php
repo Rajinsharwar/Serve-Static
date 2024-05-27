@@ -58,6 +58,10 @@ class Migrate {
             $activate = new Activate();
             $rules = $activate->rules();
 
+            // Delete the unneccessary html-cache folder.
+            global $wp_filesystem;
+            $wp_filesystem->rmdir( WP_CONTENT_DIR . '/html-cache', true);
+
             // Create or update DB version.
             $this->setup_db_version();
         }
