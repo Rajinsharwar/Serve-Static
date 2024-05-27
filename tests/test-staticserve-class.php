@@ -292,16 +292,31 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
         // Set the file path
         $file_path = $cache_dir . '/new_file.html';
+        $htaccess_path = $cache_dir . '/.htaccess';
 
         // Your content to be written to the file
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
+        $htaccess_content = '# .htaccess content';
 
         // Write content to the file
         $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt(file_put_contents($htaccess_path, $htaccess_content));
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
+
         $this->static_serve->Flush();
-        $this->assertTrue($this->is_dir_empty($cache_dir));
+        
+        $this->assertFileExists($htaccess_path);
+        $this->assertFileDoesNotExist($file_path);
+        $this->assertTrue($this->is_dir_empty_except_htaccess($cache_dir));
+    }
+
+    /**
+     * Helper function to check if a directory is empty except for .htaccess
+     */
+    private function is_dir_empty_except_htaccess($dir) {
+        $files = array_diff(scandir($dir), array('.', '..', '.htaccess'));
+        return empty($files);
     }
 
     public function test_flush_url(){
