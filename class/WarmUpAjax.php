@@ -36,6 +36,8 @@ class WarmUpAjax {
         $warmup = new WarmUp();
         $frontend_urls = $urls == ['all'] ? $warmup->GetUrls() : $urls;
         $frontend_urls = array_values($frontend_urls);
+        $flush = new StaticServe();
+        $flush->Flush();
         $this->FlushLog();
         delete_option( 'serve_static_log_all_done' );
         delete_option( 'serve_statis_failed_requests_count' );
@@ -125,7 +127,6 @@ class WarmUpAjax {
 
         // Increment the count by the value sent in the AJAX request
         $failed_count = isset( $_POST['failed_count']) ? intval($_POST['failed_count']) : 0;
-        error_log($failed_count);
         $new_count = $current_count + $failed_count;
 
         // Update the option in the database
