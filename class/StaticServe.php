@@ -594,8 +594,9 @@ class StaticServe {
 
         // Check if the cached file exists
         if ( file_exists( $cache_path ) ) {
+            global $wp_filesystem;
             // Serve the cached file
-            readfile( $cache_path );
+            print_r( $wp_filesystem->get_contents( $cache_path ) );
             exit;
         }
     }

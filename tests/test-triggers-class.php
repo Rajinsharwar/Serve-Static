@@ -71,8 +71,11 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/hello-world';
         // Ensure the cache directory exists
+        global $wp_filesystem;
+
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            global $wp_filesystem;
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -82,7 +85,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
 
         update_option('serve_static_make_static', 1);
 
@@ -110,8 +113,10 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/hello-world1';
         // Ensure the cache directory exists
+        global $wp_filesystem;
+
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -121,7 +126,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
 
         update_option('serve_static_manual_entry', 1);
         update_option('serve_static_urls', array($post_permalink => 1));

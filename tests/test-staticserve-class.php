@@ -42,6 +42,8 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
     
         // Check if the cache directory exists
         if (is_dir($cache_dir)) {
+            global $wp_filesystem;
+
             // Open the cache directory
             $dir_handle = opendir($cache_dir);
     
@@ -54,7 +56,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
                         $this->clean_up("$cache_dir/$file");
                     } else {
                         // If it's a file, delete it
-                        unlink("$cache_dir/$file");
+                        wp_delete_file("$cache_dir/$file");
                     }
                 }
             }
@@ -63,7 +65,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
             closedir($dir_handle);
     
             // Delete the directory itself
-            rmdir($cache_dir);
+            $wp_filesystem->rmdir($cache_dir);
         }
     }
 
@@ -285,9 +287,11 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
     public function test_flush_all(){
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
+        global $wp_filesystem;
+
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -299,8 +303,8 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $htaccess_content = '# .htaccess content';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
-        $this->assertIsInt(file_put_contents($htaccess_path, $htaccess_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($htaccess_path, $htaccess_content));
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
 
@@ -321,9 +325,11 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
     public function test_flush_url(){
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/blog';
+        global $wp_filesystem;
+
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -333,7 +339,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
         $this->static_serve->Flush(get_site_url() . '/blog');
@@ -342,9 +348,11 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
     public function test_not_cache_available(){
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
+        global $wp_filesystem;
+
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -354,7 +362,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertFalse($this->static_serve->is_cache_available(get_site_url() . '/blog'));
         $this->static_serve->Flush();
@@ -362,9 +370,11 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
     public function test_cache_available(){
         $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/blog';
+        global $wp_filesystem;
+
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            mkdir($cache_dir, 0755, true);
+            $wp_filesystem->mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -374,7 +384,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt(file_put_contents($file_path, $file_content));
+        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertTrue($this->static_serve->is_cache_available(get_site_url() . '/blog'));
         $this->static_serve->Flush();

@@ -474,6 +474,7 @@ class Activate
                 <h4 style="margin-left: 10px;">
                 <?php
                 printf(
+                    // Translators: Disclaimer for Review.
                     esc_html__(
                         'I have spent many of my hours with this project so that you can serve a Static website. A %1$s review will motivate me a lot.',
                         'serve_static'

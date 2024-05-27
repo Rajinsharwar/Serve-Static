@@ -16,11 +16,12 @@ class Test_Activate_Class extends WP_UnitTestCase {
 
         // Create a temporary directory for testing
         $this->testDirectory = sys_get_temp_dir() . '/test_directory';
-        mkdir($this->testDirectory);
+        global $wp_filesystem;
+        $wp_filesystem->mkdir($this->testDirectory);
 
         // Create some files in the test directory
-        file_put_contents($this->testDirectory . '/file1.txt', 'Hello, World!');
-        file_put_contents($this->testDirectory . '/file2.txt', 'This is a test.');
+        $wp_filesystem->put_contents($this->testDirectory . '/file1.txt', 'Hello, World!');
+        $wp_filesystem->put_contents($this->testDirectory . '/file2.txt', 'This is a test.');
 
 		// This is the key here.
 		set_current_screen( 'edit-post' );
@@ -38,17 +39,19 @@ class Test_Activate_Class extends WP_UnitTestCase {
 
     private function removeDirectory($dir) {
         if (is_dir($dir)) {
+            global $wp_filesystem;
+
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != '.' && $object != '..') {
                     if (is_dir($dir . '/' . $object)) {
                         $this->removeDirectory($dir . '/' . $object);
                     } else {
-                        unlink($dir . '/' . $object);
+                        wp_delete_file($dir . '/' . $object);
                     }
                 }
             }
-            rmdir($dir);
+            $wp_filesystem->rmdir($dir);
         }
     }
 
