@@ -60,7 +60,7 @@ class StaticServe {
                 return false;
             }
         }
-        $html_path = WP_CONTENT_DIR . '/html-cache' . wp_parse_url($current_url, PHP_URL_PATH) . '/index.html';
+        $html_path = WP_CONTENT_DIR . '/serve-static-cache' . wp_parse_url($current_url, PHP_URL_PATH) . '/index.html';
         if ( ! file_exists( $html_path ) ) {
             // If HTML copy doesn't exist, create one
             ob_start(function($html_content) use ($current_url, $html_path) {
@@ -198,8 +198,8 @@ class StaticServe {
 
     public function Cache($html_content) {
         // Create folders for CSS and JS if they don't exist
-        $css_dir = WP_CONTENT_DIR . '/html-cache/css';
-        $js_dir = WP_CONTENT_DIR . '/html-cache/js';
+        $css_dir = WP_CONTENT_DIR . '/serve-static-cache/css';
+        $js_dir = WP_CONTENT_DIR . '/serve-static-cache/js';
 
         global $wp_filesystem;
 
@@ -241,8 +241,8 @@ class StaticServe {
                     wp_mkdir_p($css_subfolder_path);
                 }
                 $wp_filesystem->put_contents( $css_subfolder_path . '/' . $css_filename, $css_content, FS_CHMOD_FILE );
-                // $html_content = str_replace($css_url, $this->convertRelativeToAbsolute($css_url, WP_CONTENT_URL . '/html-cache/css' . $css_subfolder . '/' . $css_filename), $html_content);
-                $html_content = str_replace($css_url, WP_CONTENT_URL . '/html-cache/css' . $css_subfolder . '/' . $css_filename, $html_content);
+                // $html_content = str_replace($css_url, $this->convertRelativeToAbsolute($css_url, WP_CONTENT_URL . '/serve-static-cache/css' . $css_subfolder . '/' . $css_filename), $html_content);
+                $html_content = str_replace($css_url, WP_CONTENT_URL . '/serve-static-cache/css' . $css_subfolder . '/' . $css_filename, $html_content);
             }
         }
         
@@ -273,8 +273,8 @@ class StaticServe {
                     wp_mkdir_p($js_subfolder_path);
                 }
                 $wp_filesystem->put_contents($js_subfolder_path . '/' . $js_filename, $js_content, FS_CHMOD_FILE);
-                $html_content = str_replace($js_url, WP_CONTENT_URL . '/html-cache/js' . $js_subfolder . '/' . $js_filename, $html_content);
-                // $html_content = str_replace($js_url, $this->convertRelativeToAbsolute($js_url, WP_CONTENT_URL . '/html-cache/js' . $js_subfolder . '/' . $js_filename), $html_content);
+                $html_content = str_replace($js_url, WP_CONTENT_URL . '/serve-static-cache/js' . $js_subfolder . '/' . $js_filename, $html_content);
+                // $html_content = str_replace($js_url, $this->convertRelativeToAbsolute($js_url, WP_CONTENT_URL . '/serve-static-cache/js' . $js_subfolder . '/' . $js_filename), $html_content);
             }
         }
 
@@ -285,7 +285,7 @@ class StaticServe {
 
         global $wp_filesystem;
     
-        $directory = WP_CONTENT_DIR . '/html-cache';
+        $directory = WP_CONTENT_DIR . '/serve-static-cache';
     
         if ($url) {
             $url_path = wp_parse_url($url, PHP_URL_PATH);
@@ -556,7 +556,7 @@ class StaticServe {
 
         global $wp_filesystem;
     
-        $directory = WP_CONTENT_DIR . '/html-cache';
+        $directory = WP_CONTENT_DIR . '/serve-static-cache';
         $url_path = wp_parse_url($url, PHP_URL_PATH);
         $directory .= $url_path;
     
@@ -587,7 +587,7 @@ class StaticServe {
         $request_uri = $_SERVER['REQUEST_URI'];
 
         // Construct the path to the cached file
-        $cache_path = WP_CONTENT_DIR . '/html-cache' . $request_uri . '/index.html';
+        $cache_path = WP_CONTENT_DIR . '/serve-static-cache' . $request_uri . '/index.html';
 
         // Check if the cached file exists
         if ( file_exists( $cache_path ) ) {

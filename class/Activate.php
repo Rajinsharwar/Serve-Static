@@ -41,7 +41,7 @@ class Activate
             }
 
             // Create a directory for storing HTML copies
-            $cache_dir = WP_CONTENT_DIR . '/html-cache';
+            $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
             if (!$wp_filesystem->is_dir($cache_dir)) {
                 $wp_filesystem->mkdir($cache_dir, 0755, true);
             }
@@ -88,8 +88,8 @@ class Activate
             'RewriteCond %{REQUEST_URI} !^/wp-admin/ [NC]',
             'RewriteCond %{REQUEST_METHOD} GET',
             'RewriteCond %{QUERY_STRING} ^$ [NC]',
-            'RewriteCond ' . WP_CONTENT_DIR . '/html-cache' . $folder . '/$1/index.html -f',
-            'RewriteRule ^(.*)$ ' . $folder . '/' . WP_CONTENT_FOLDERNAME . '/html-cache' . $folder . '/$1/index.html [L]',
+            'RewriteCond ' . WP_CONTENT_DIR . '/serve-static-cache' . $folder . '/$1/index.html -f',
+            'RewriteRule ^(.*)$ ' . $folder . '/' . WP_CONTENT_FOLDERNAME . '/serve-static-cache' . $folder . '/$1/index.html [L]',
             '',
             $end
         ];
@@ -117,12 +117,12 @@ class Activate
             '            set $cache_uri "null cache";',
             '        }',
             '',
-            '        if (-f $document_root/wp-content/html-cache$cache_uri/index.html) {',
-            '            set $cache_file $document_root/wp-content/html-cache$cache_uri/index.html;',
+            '        if (-f $document_root/wp-content/serve-static-cache$cache_uri/index.html) {',
+            '            set $cache_file $document_root/wp-content/serve-static-cache$cache_uri/index.html;',
             '        }',
             '',
             '        if ($cache_file) {',
-            '            rewrite ^ /wp-content/html-cache$cache_uri/index.html break;',
+            '            rewrite ^ /wp-content/serve-static-cache$cache_uri/index.html break;',
             '        }',
             '    }',
             '}',
@@ -173,7 +173,7 @@ class Activate
                     $admin_toolbar_parent = 'Serve Static - Not Cached';
                 }
             } else {
-                $cache_dir = WP_CONTENT_DIR . '/html-cache';
+                $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
                 $cache_size = $this->get_directory_size($cache_dir);
                 $admin_toolbar_parent = 'Static Cache Size: ' . size_format($cache_size, 2); ?>
                 <style>

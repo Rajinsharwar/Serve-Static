@@ -69,7 +69,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         $post_object = get_post($post_id);
 
-        $cache_dir = WP_CONTENT_DIR . '/html-cache/hello-world';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/hello-world';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);
@@ -108,7 +108,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         $post_object = get_post($post_id);
 
-        $cache_dir = WP_CONTENT_DIR . '/html-cache/hello-world1';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/hello-world1';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);

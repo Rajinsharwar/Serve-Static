@@ -38,7 +38,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
     public function clean_up(){
         // Define the cache directory path
-        $cache_dir = WP_CONTENT_DIR . '/html-cache';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
     
         // Check if the cache directory exists
         if (is_dir($cache_dir)) {
@@ -284,7 +284,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
     }
 
     public function test_flush_all(){
-        $cache_dir = WP_CONTENT_DIR . '/html-cache';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);
@@ -305,7 +305,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
     }
 
     public function test_flush_url(){
-        $cache_dir = WP_CONTENT_DIR . '/html-cache/blog';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/blog';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);
@@ -326,7 +326,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
     }
 
     public function test_not_cache_available(){
-        $cache_dir = WP_CONTENT_DIR . '/html-cache';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);
@@ -346,7 +346,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
     }
 
     public function test_cache_available(){
-        $cache_dir = WP_CONTENT_DIR . '/html-cache/blog';
+        $cache_dir = WP_CONTENT_DIR . '/serve-static-cache/blog';
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
             mkdir($cache_dir, 0755, true);
