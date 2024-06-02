@@ -329,7 +329,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            $wp_filesystem->mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
@@ -374,7 +374,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            $wp_filesystem->mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true);
         }
 
         // Set the file path
