@@ -60,7 +60,7 @@ class StaticServe {
                 return false;
             }
         }
-        $html_path = WP_CONTENT_DIR . '/html-cache' . wp_parse_url($current_url, PHP_URL_PATH) . '/index.html';
+        $html_path = WP_CONTENT_DIR . '/serve-static-cache' . wp_parse_url($current_url, PHP_URL_PATH) . '/index.html';
         if ( ! file_exists( $html_path ) ) {
             // If HTML copy doesn't exist, create one
             ob_start(function($html_content) use ($current_url, $html_path) {
@@ -198,8 +198,8 @@ class StaticServe {
 
     public function Cache($html_content) {
         // Create folders for CSS and JS if they don't exist
-        $css_dir = WP_CONTENT_DIR . '/html-cache/css';
-        $js_dir = WP_CONTENT_DIR . '/html-cache/js';
+        $css_dir = WP_CONTENT_DIR . '/serve-static-cache/css';
+        $js_dir = WP_CONTENT_DIR . '/serve-static-cache/js';
 
         global $wp_filesystem;
 
@@ -241,8 +241,8 @@ class StaticServe {
                     wp_mkdir_p($css_subfolder_path);
                 }
                 $wp_filesystem->put_contents( $css_subfolder_path . '/' . $css_filename, $css_content, FS_CHMOD_FILE );
-                // $html_content = str_replace($css_url, $this->convertRelativeToAbsolute($css_url, WP_CONTENT_URL . '/html-cache/css' . $css_subfolder . '/' . $css_filename), $html_content);
-                $html_content = str_replace($css_url, WP_CONTENT_URL . '/html-cache/css' . $css_subfolder . '/' . $css_filename, $html_content);
+                // $html_content = str_replace($css_url, $this->convertRelativeToAbsolute($css_url, WP_CONTENT_URL . '/serve-static-cache/css' . $css_subfolder . '/' . $css_filename), $html_content);
+                $html_content = str_replace($css_url, WP_CONTENT_URL . '/serve-static-cache/css' . $css_subfolder . '/' . $css_filename, $html_content);
             }
         }
         
@@ -273,8 +273,8 @@ class StaticServe {
                     wp_mkdir_p($js_subfolder_path);
                 }
                 $wp_filesystem->put_contents($js_subfolder_path . '/' . $js_filename, $js_content, FS_CHMOD_FILE);
-                $html_content = str_replace($js_url, WP_CONTENT_URL . '/html-cache/js' . $js_subfolder . '/' . $js_filename, $html_content);
-                // $html_content = str_replace($js_url, $this->convertRelativeToAbsolute($js_url, WP_CONTENT_URL . '/html-cache/js' . $js_subfolder . '/' . $js_filename), $html_content);
+                $html_content = str_replace($js_url, WP_CONTENT_URL . '/serve-static-cache/js' . $js_subfolder . '/' . $js_filename, $html_content);
+                // $html_content = str_replace($js_url, $this->convertRelativeToAbsolute($js_url, WP_CONTENT_URL . '/serve-static-cache/js' . $js_subfolder . '/' . $js_filename), $html_content);
             }
         }
 
@@ -285,7 +285,7 @@ class StaticServe {
 
         global $wp_filesystem;
     
-        $directory = WP_CONTENT_DIR . '/html-cache';
+        $directory = WP_CONTENT_DIR . '/serve-static-cache';
     
         if ($url) {
             $url_path = wp_parse_url($url, PHP_URL_PATH);
@@ -304,6 +304,10 @@ class StaticServe {
             } else {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST);    
                 foreach ($iterator as $path) {
+                    // Skip .htaccess file
+                    if ($path->getFilename() === '.htaccess') {
+                        continue;
+                    }
                     if ($path->isDir()) {
                         $wp_filesystem->rmdir($path->getPathname(), true);
                     } else {
@@ -313,7 +317,6 @@ class StaticServe {
             }
         }
     
-        delete_transient('serve_static_cache_warming_in_progress', true);
     }
 
     /**
@@ -556,7 +559,7 @@ class StaticServe {
 
         global $wp_filesystem;
     
-        $directory = WP_CONTENT_DIR . '/html-cache';
+        $directory = WP_CONTENT_DIR . '/serve-static-cache';
         $url_path = wp_parse_url($url, PHP_URL_PATH);
         $directory .= $url_path;
     
@@ -572,6 +575,31 @@ class StaticServe {
             return false;
         }
     }
+
+    public function use_fallback_method(){
+        if ( get_option( 'serve_static_fallback_method' ) != 1 ) {
+            return;
+        }
+
+        // Allow only GET requests with empty query strings
+        if ($_SERVER['REQUEST_METHOD'] !== 'GET' || !empty($_SERVER['QUERY_STRING'])) {
+            return;
+        }
+
+        // Get the current request URI
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        // Construct the path to the cached file
+        $cache_path = WP_CONTENT_DIR . '/serve-static-cache' . $request_uri . '/index.html';
+
+        // Check if the cached file exists
+        if ( file_exists( $cache_path ) ) {
+            global $wp_filesystem;
+            // Serve the cached file
+            print_r( $wp_filesystem->get_contents( $cache_path ) );
+            exit;
+        }
+    }
 }
 
 require_once( ABSPATH . '/wp-includes/pluggable.php' );
@@ -580,4 +608,8 @@ $static = new StaticServe();
 
 if ( ! is_admin() && ! is_user_logged_in() && ! strpos($_SERVER['REQUEST_URI'], 'elementor') !== false && get_option('serve_static_master_key', '') != '' && get_option( 'serve_static_master_key' ) == 1 ){
     add_action('template_redirect', array( $static, 'Build' ));
+}
+
+if ( ! is_user_logged_in() && ! is_admin() ) { // Bail out early for logged in users, and admins.
+    add_action('template_redirect', array( $static, 'use_fallback_method' ));
 }

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Serve Static
  * Description: Cache and serve HTML copies of your webpages. Avoid the PHP hit on any page load, and deploy pages fully static on your server.
- * Version: 1.0.4
+ * Version: 2.1
  * Author: Rajin Sharwar
  * Author URI: https://linkedin.com/in/rajinsharwar
  * License: GPLv2
@@ -36,7 +36,7 @@ if ( ! function_exists( 'serve_static_analytics' ) ) {
                 'has_paid_plans'      => false,
                 'menu'                => array(
                     'slug'           => 'serve_static_settings',
-                    'first-path'     => 'admin.php?page=serve_static_settings',
+                    'first-path'     => 'admin.php?page=serve_static_warmer',
                     'account'        => false,
                 ),
             ) );
@@ -90,11 +90,14 @@ WP_Filesystem();
 
 require_once __DIR__.'/class/Activate.php';
 require_once __DIR__.'/admin/Admin.php';
+require_once __DIR__.'/admin/Warmer.php';
 require_once __DIR__.'/class/StaticServe.php';
 require_once __DIR__.'/class/WarmUp.php';
+require_once __DIR__.'/class/WarmUpAjax.php';
 require_once __DIR__.'/class/Triggers.php';
 require_once __DIR__.'/class/Cron.php';
 require_once __DIR__.'/class/Server.php';
+require_once __DIR__.'/class/Migrate.php';
 
 function serve_static_activate( $plugin ) {
 
@@ -120,7 +123,24 @@ function serve_static_activate( $plugin ) {
 }
 add_action( 'activated_plugin', 'serve_static_activate' );
 
-register_deactivation_hook( __FILE__, 'serve_static_deactivate' );
+// Register Custom DB table.
+register_activation_hook(__FILE__, 'serve_static_create_database_tables');
+
+function serve_static_create_database_tables() {
+    global $wpdb;
+    $table_name = $wpdb->prefix . 'serve_static_warm_logs';
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        log_url text NOT NULL,
+        log_status text NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( $sql );
+}
 
 function serve_static_deactivate(){
 
@@ -157,3 +177,6 @@ function serve_static_deactivate(){
         }
     }
 }
+
+//Deactivation Hook.
+register_deactivation_hook( __FILE__, 'serve_static_deactivate' );

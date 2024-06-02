@@ -135,6 +135,9 @@ class Triggers {
         }
     }
 
+    /**
+     * Plugins Modified Admin notices.
+     */
     public function plugins_modified() {
 
         set_transient( 'serve_static_plugin_modified_notice', true, DAY_IN_SECONDS );
@@ -142,12 +145,9 @@ class Triggers {
     }
     
     public function show_plugins_modified_notice() {
-        $is_cache_warming_in_progress = get_transient('serve_static_cache_warming_in_progress');
     
-        // Define the base URL
-        $base_url = admin_url('admin.php?page=serve_static_settings');
-    
-        $warm_cache_url = $is_cache_warming_in_progress ? $base_url : wp_nonce_url($base_url . '&action=warm_cache', 'serve_static_warm_cache', '_wpnonce', 10);
+        // Define the Warm Cache URL.
+        $warm_cache_url = admin_url('admin.php?page=serve_static_warmer');
     
         ?>
         <div class="notice notice-warning serve-static-notice is-dismissible">
@@ -164,6 +164,43 @@ class Triggers {
         if ( isset( $_GET['serve_static_dismiss_notice'] ) ) {
             delete_transient( 'serve_static_plugin_modified_notice' );
             wp_safe_redirect( remove_query_arg( 'serve_static_dismiss_notice' ) );
+            exit;
+        }
+    }
+
+    /**
+     * Database Updated Admin Notice.
+     */
+    public function db_updated() {
+        set_transient( 'serve_static_db_update_notice', true, DAY_IN_SECONDS );
+    }
+    
+    public function show_db_update_notice() {
+    
+        // Return early if the transient not present.
+        if ( ! get_transient( 'serve_static_db_update_notice' ) ) {
+            return;
+        }
+
+        // Define the Warm Cache URL.
+        $base_url = admin_url('admin.php?page=serve_static_warmer');
+        $warm_cache_url = wp_nonce_url($base_url . '&action=warm_cache', 'serve_static_warm_cache', '_wpnonce', 10);
+    
+        ?>
+        <div class="notice notice-warning serve-static-notice is-dismissible">
+            <p><?php esc_html_e( 'The Database verson of serve Static has been changed. Please regenerate the Static Cache for this plugin to function properly', 'serve_static' ); ?></p>
+            <p>
+                <a class="button button-primary" href="<?php echo esc_url( $warm_cache_url ); ?>"><?php esc_html_e( 'Regenerate Cache', 'serve_static' ); ?></a>
+                <a class="serve-static-dismiss" href="<?php echo esc_url( add_query_arg( 'serve_static_dismiss_db_update_notice', 'true' ) ); ?>"><?php esc_html_e( 'Dismiss', 'serve_static' ); ?></a>
+            </p>
+        </div>
+        <?php
+    }
+    
+    public function dismiss_db_updated_notice() {
+        if ( isset( $_GET['serve_static_dismiss_db_update_notice'] ) ) {
+            delete_transient( 'serve_static_db_update_notice' );
+            wp_safe_redirect( remove_query_arg( 'serve_static_dismiss_db_update_notice' ) );
             exit;
         }
     }
@@ -207,8 +244,15 @@ if ( get_option( 'serve_static_master_key' ) == 1 ){
     add_action( 'deactivated_plugin', array( $triggers, 'plugins_modified') );
     add_action( 'switch_theme', array( $triggers, 'plugins_modified') );
 
+    // Add Plugins Modified notice.
     if ( get_transient( 'serve_static_plugin_modified_notice' )){
         add_action( 'admin_notices', array( $triggers, 'show_plugins_modified_notice' ) );
         add_action( 'admin_init', array( $triggers, 'dismiss_plugins_modified_notice' ) );
+    }
+
+    // Add DB Updated notice.
+    if ( get_transient( 'serve_static_db_is_updated_notice' )){
+        add_action( 'admin_notices', array( $triggers, 'show_db_update_notice' ) );
+        add_action( 'admin_init', array( $triggers, 'dismiss_db_updated_notice' ) );
     }
 }

@@ -4,7 +4,7 @@ Tags: cache, caching, performance, WP cache, Serve Static, html, static site, st
 Requires at least: 5.0
 Tested up to: 6.5.2
 Requires PHP: 7.4
-Stable tag: 1.0.4
+Stable tag: 2.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,8 +31,8 @@ After activating the plugin, it will try to modify your .htaccess file. If this 
     RewriteCond %{REQUEST_URI} !^/wp-admin/ [NC]
     RewriteCond %{REQUEST_METHOD} GET
     RewriteCond %{QUERY_STRING} ^$ [NC]
-    RewriteCond %{DOCUMENT_ROOT}/wp-content/html-cache/$1/index.html -f
-    RewriteRule ^(.*)$ /wp-content/html-cache/$1/index.html [L]
+    RewriteCond %{DOCUMENT_ROOT}/wp-content/serve-static-cache/$1/index.html -f
+    RewriteRule ^(.*)$ /wp-content/serve-static-cache/$1/index.html [L]
     # END Serve Static Cache
 
 If you the website installed on a sub-folder, like such that "https://test.com/domain1", is your main domain of your WordPress site, you need to use a different .htaccess code. The plugin will automatically do that for you, but incase you need to do it manually, below is the format you need to follow.
@@ -45,8 +45,8 @@ If you the website installed on a sub-folder, like such that "https://test.com/d
     RewriteCond %{REQUEST_URI} !^/wp-admin/ [NC]
     RewriteCond %{REQUEST_METHOD} GET
     RewriteCond %{QUERY_STRING} ^$ [NC]
-    RewriteCond "WP_CONTENT_DIR"/html-cache/"sub-folder domain without slashes"/$1/index.html -f
-    RewriteRule ^(.*)$ /"sub-folder domain without slashes"/wp-content/html-cache/"sub-folder domain without slashes"/$1/index.html [L]
+    RewriteCond "WP_CONTENT_DIR"/serve-static-cache/"sub-folder domain without slashes"/$1/index.html -f
+    RewriteRule ^(.*)$ /"sub-folder domain without slashes"/wp-content/serve-static-cache/"sub-folder domain without slashes"/$1/index.html [L]
     # END Serve Static Cache
 
 The value of the WP_CONTENT_DIR should be something like: "/home/test.com/public_html/staging/wp-content"
@@ -71,12 +71,12 @@ When using a nginx server, make sure to add the following rules:
                 set $cache_uri "null cache";
             }
     
-            if (-f $document_root/wp-content/html-cache$cache_uri/index.html) {
-                set $cache_file $document_root/wp-content/html-cache$cache_uri/index.html;
+            if (-f $document_root/wp-content/serve-static-cache$cache_uri/index.html) {
+                set $cache_file $document_root/wp-content/serve-static-cache$cache_uri/index.html;
             }
     
             if ($cache_file) {
-                rewrite ^ /wp-content/html-cache$cache_uri/index.html break;
+                rewrite ^ /wp-content/serve-static-cache$cache_uri/index.html break;
             }
         }
     }
