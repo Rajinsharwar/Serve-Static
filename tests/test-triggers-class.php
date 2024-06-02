@@ -75,10 +75,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
 
         if (!file_exists($cache_dir)) {
             global $wp_filesystem;
-            /*
-            * @codeCoverageIgnore
-            */
-            mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true); // phpcs:ignore
         }
 
         // Set the file path
@@ -119,10 +116,7 @@ class Test_Triggers_Class extends WP_UnitTestCase {
         global $wp_filesystem;
 
         if (!file_exists($cache_dir)) {
-            /*
-            * @codeCoverageIgnore
-            */
-            mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true); // phpcs:ignore
         }
 
         // Set the file path

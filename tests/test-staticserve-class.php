@@ -329,10 +329,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            /*
-            * @codeCoverageIgnore
-            */
-            mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true); // phpcs:ignore
         }
 
         // Set the file path
@@ -377,10 +374,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
 
         // Ensure the cache directory exists
         if (!file_exists($cache_dir)) {
-            /*
-            * @codeCoverageIgnore
-            */
-            mkdir($cache_dir, 0755, true);
+            mkdir($cache_dir, 0755, true); // phpcs:ignore
         }
 
         // Set the file path
