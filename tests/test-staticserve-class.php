@@ -339,7 +339,7 @@ class Test_StaticServe_Class extends WP_UnitTestCase {
         $file_content = '<html><body><p>This is the content of the new file.</p></body></html>';
 
         // Write content to the file
-        $this->assertIsInt($wp_filesystem->put_contents($file_path, $file_content));
+        $this->assertTrue($wp_filesystem->put_contents($file_path, $file_content));
 
         $this->assertFalse($this->is_dir_empty($cache_dir));
         $this->static_serve->Flush(get_site_url() . '/blog');
