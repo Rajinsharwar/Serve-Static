@@ -38,6 +38,7 @@ class Migrate {
         // Only hook if DB version and plugin version are different.
         if ( $this->db_version != $this->plugin_version ) {
             add_action( 'admin_init', array( $this, 'migrate_from_v2_0' ), 99 );
+            add_action( 'admin_init', array( $this, 'migrate_from_v2_1' ), 99 );
         }
     }
 
@@ -61,6 +62,31 @@ class Migrate {
             // Delete the unneccessary html-cache folder.
             global $wp_filesystem;
             $wp_filesystem->rmdir( WP_CONTENT_DIR . '/html-cache', true);
+
+            // Create or update DB version.
+            $this->setup_db_version();
+        }
+    }
+
+    public function migrate_from_v2_1() {
+        if ( ! $this->db_version || 2.0 == $this->db_version || 2.1 < $this->plugin_version ) {
+
+            $cache_dir = WP_CONTENT_DIR . '/serve-static-cache';
+
+            $cache_htaccess_rules = [
+                ''
+            ];
+            $cache_htaccess = implode(PHP_EOL, $cache_htaccess_rules) . PHP_EOL . $serve_static_htaccess_file;
+
+            // Empty the unneccessary .htaccess in serve-static-cache folder.
+            global $wp_filesystem;
+            $cache_htaccess = $wp_filesystem->put_contents($cache_dir . '/' . '.htaccess', $cache_htaccess, FS_CHMOD_FILE);
+
+            if ( ! isset($cache_htaccess) || $cache_htaccess != 1 ){
+                set_transient( 'serve_static_htaccess_not_writable', 1 );
+            } elseif ( $cache_htaccess == 1 ) {
+                delete_transient( 'serve_static_htaccess_not_writable' );
+            }
 
             // Create or update DB version.
             $this->setup_db_version();

@@ -49,8 +49,7 @@ class Activate
                 $serve_static_htaccess_file = $wp_filesystem->get_contents( $cache_dir . '.htaccess' );
 
                 $cache_htaccess_rules = [
-                    'RewriteEngine On',
-                    'RewriteRule \.html$ - [F]'
+                    ''
                 ];
                 $cache_htaccess = implode(PHP_EOL, $cache_htaccess_rules) . PHP_EOL . $serve_static_htaccess_file;
 
