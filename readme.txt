@@ -1,4 +1,4 @@
-=== Serve Static ===
+=== Serve Static - Automatic WordPress Static Page generator ===
 Contributors: rajinsharwar
 Tags: cache, caching, performance, WP cache, Serve Static, html, static site, static website generator
 Requires at least: 5.0

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Serve Static
+ * Plugin Name: Serve Static - Automatic WordPress Static Page generator
  * Description: Cache and serve HTML copies of your webpages. Avoid the PHP hit on any page load, and deploy pages fully static on your server.
  * Version: 2.2
  * Author: Rajin Sharwar
