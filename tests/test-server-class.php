@@ -18,7 +18,7 @@ class Test_Server_Class extends WP_UnitTestCase {
 		set_current_screen( 'edit-post' );
         
 		// Instantiate the Server class
-        $this->server = new ServeStatic\Class\Server();
+        $this->server = new ServeStatic\Classes\Server();
     }
 
     public function tear_down() {

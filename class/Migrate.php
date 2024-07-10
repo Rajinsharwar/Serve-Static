@@ -1,6 +1,6 @@
 <?php
 
-namespace ServeStatic\Class;
+namespace ServeStatic\Classes;
 
 if ( ! defined( 'ABSPATH' )) {
     exit; // Exit if accessed directly.
@@ -76,7 +76,7 @@ class Migrate {
             $cache_htaccess_rules = [
                 ''
             ];
-            $cache_htaccess = implode(PHP_EOL, $cache_htaccess_rules) . PHP_EOL . $serve_static_htaccess_file;
+            $cache_htaccess = implode(PHP_EOL, $cache_htaccess_rules) . PHP_EOL;
 
             // Empty the unneccessary .htaccess in serve-static-cache folder.
             global $wp_filesystem;

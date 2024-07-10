@@ -1,8 +1,8 @@
 <?php
 
-namespace ServeStatic\Class;
+namespace ServeStatic\Classes;
 
-use ServeStatic\Class\Minify\Minifier;
+use ServeStatic\Classes\Minify\Minifier;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -95,13 +95,12 @@ class StaticServe {
                         }
 
                         // Write HTML content to the file
-                        if ( $wp_filesystem->put_contents( $html_path, $html_content, FS_CHMOD_FILE ) ) {
-                            exit;
-                        }
+                        $wp_filesystem->put_contents( $html_path, $html_content, FS_CHMOD_FILE );
                     }
                 }
             });
         }
+        return;
     }
 
     /**

@@ -26,8 +26,8 @@ class Test_Activate_Class extends WP_UnitTestCase {
 		// This is the key here.
 		set_current_screen( 'edit-post' );
         
-        $this->activate = new ServeStatic\Class\Activate();
-        $this->admin = new ServeStatic\Class\Admin();
+        $this->activate = new ServeStatic\Classes\Activate();
+        $this->admin = new ServeStatic\Classes\Admin();
     }
 
     public function tear_down() {

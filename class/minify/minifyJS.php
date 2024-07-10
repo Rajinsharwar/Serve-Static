@@ -16,7 +16,7 @@
  * @author     Robert Hafner <tedivm@tedivm.com>
  */
 
-namespace ServeStatic\Class\Minify;
+namespace ServeStatic\Classes\Minify;
 
 class Minifier {
     /**
