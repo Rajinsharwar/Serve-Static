@@ -2,7 +2,7 @@
 Contributors: rajinsharwar
 Tags: cache, caching, performance, WP cache, Serve Static, html, static site, static website generator
 Requires at least: 5.0
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 7.4
 Stable tag: 2.3
 License: GPLv2
