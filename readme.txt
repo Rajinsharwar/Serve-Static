@@ -146,6 +146,24 @@ Cache plugins -- such as W3 Total Cache or WP Super Cache or WP Rocket -- make y
 
 Serve Static creates a static copy of your WordPress pages that is intended to be used completely separately from your WordPress installation, PHP or MySQL.
 
+= Can I enable cache save for logged-in users? =
+
+Caching is by default completely disabled for Loggedin users because of compatibility issues. Still if you would like to enable caching, we have a couple of filters for that.
+
+Use "serve_static_enable_logged_in" filter to enable cache save as a logged-in user. By default as an Administrator.
+Example:
+    add_filter( 'serve_static_enable_logged_in', function( $value ) {
+        return true;
+    } );
+
+Use "serve_static_logged_in_role" filter to change the type of user used to generate the cache as logged-in. This filter won't work if you don't have the used the "serve_static_enable_logged_in" filter already. By default, it's value is Administrator.
+Example to change the cache generation as a logged-in Subscriber user:
+    add_filter( 'serve_static_logged_in_role', function( $value ) {
+        return 'Subscriber';
+    } );
+
+Check this link to find the Text's you can use. Not applicable if you have custom User role: https://wordpress.org/documentation/article/roles-and-capabilities/#summary-of-roles
+
 == Installation ==
 
 1. Unzip the downloaded package.
