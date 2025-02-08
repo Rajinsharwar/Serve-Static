@@ -64,12 +64,44 @@ class WarmUpAjax {
         if ( is_array($urls) && isset($urls[$url_index])) {
             $url = esc_url_raw($urls[$url_index]);
             $warmup = new WarmUp();
+            $enable_for_logged_in = apply_filters( 'serve_static_enable_logged_in', false );
+
+            if ( $enable_for_logged_in && false === get_transient( 'serve_static_logged_in_cookie' ) ) {
+                $logged_in_role = apply_filters( 'serve_static_logged_in_role', 'Administrator' );
+
+                $args = [
+                    'role' => $logged_in_role,
+                    'number' => 1,
+                    'orderby' => 'ID',
+                    'order' => 'ASC',
+                ];
+
+                $user_query = new \WP_User_Query($args);
+                $cookies = [];
+
+                if ( ! empty( $user_query->results ) ) {
+                    $user = $user_query->results[0];
+                    if (isset($_COOKIE['wordpress_logged_in_' . COOKIEHASH])) {
+                        $cookies = array_merge($cookies, [
+                            'wordpress_logged_in_' . COOKIEHASH => $_COOKIE['wordpress_logged_in_' . COOKIEHASH],
+                            // 'wp-settings-' . $user->ID => $_COOKIE['wp-settings-' . $user->ID],
+                            // 'wp-settings-time-' . $user->ID => $_COOKIE['wp-settings-time-' . $user->ID],
+                        ]);
+                    }
+
+                    set_transient( 'serve_static_logged_in_cookies', $cookies, DAY_IN_SECONDS );
+                } else {
+                    set_transient( 'serve_static_logged_in_cookies', [], DAY_IN_SECONDS );
+                }
+            }
+
             $response = $warmup->SendRequest( $url, $last_url );
             if ( is_string( $response ) ) { // String means error.
                 $this->Log( $url, '<b style="color:red;">' . $response . '</b>' ); // Log in the DB.
                 
                 if ( $url == $last_url ){ // If the Last URl was an error.
                     update_option( 'serve_static_log_all_done', 1 );
+                    delete_transient( 'serve_static_logged_in_cookies' );
                 }
 
                 wp_send_json_error(['url_index' => $url_index, 'error' => $response ]);

@@ -79,6 +79,16 @@ class WarmUp
 
     public function SendRequest(string $url, string $last_url, int $timeout = 50, string $user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36', array $cookies = [], array $request_headers = [])
     {
+        $enable_for_logged_in = apply_filters( 'serve_static_enable_logged_in', false );
+
+        if ( $enable_for_logged_in ) {
+            $cookies = get_transient( 'serve_static_logged_in_cookies' );
+
+            if ( false === $cookies ) {
+                $cookies = [];
+            }
+        }
+
         $request_headers['X-Serve-Static-Request'] = 'true';
         
         $response = wp_safe_remote_get(

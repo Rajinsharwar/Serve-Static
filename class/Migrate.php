@@ -95,4 +95,6 @@ class Migrate {
 
 }
 
-$migrate = new Migrate();
+add_action( 'init', function() {
+    new Migrate();
+});

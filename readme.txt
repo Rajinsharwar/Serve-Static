@@ -4,7 +4,7 @@ Tags: cache, caching, performance, WP cache, Serve Static, html, static site, st
 Requires at least: 5.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,11 @@ Serve Static creates a static copy of your WordPress pages that is intended to b
 4. Optional: You may need to modify the rewrite rules.
 
 == Changelog ==
+
+= 2.4 =
+* Added new filters "serve_static_enable_logged_in" and "serve_static_logged_in_role" to enable cache for logged-in users.
+* Fixed issue with Translations warning.
+* Fixed issue with not being able to create cache folder.
 
 = 2.3 =
 * Fixed fatal errors for PHp 7.4.30.

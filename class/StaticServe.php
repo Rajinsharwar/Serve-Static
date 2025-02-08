@@ -203,11 +203,11 @@ class StaticServe {
         global $wp_filesystem;
 
         if ( ! $wp_filesystem->is_dir($css_dir)) {
-            $wp_filesystem->mkdir($css_dir, 0755, true);
+            wp_mkdir_p($css_dir, 0755, true);
         }
 
         if ( ! $wp_filesystem->is_dir($js_dir)) {
-            $wp_filesystem->mkdir($js_dir, 0755, true);
+            wp_mkdir_p($js_dir, 0755, true);
         }
     
         // Find and cache CSS links
@@ -601,14 +601,24 @@ class StaticServe {
     }
 }
 
-require_once( ABSPATH . '/wp-includes/pluggable.php' );
-//Register Static service
-$static = new StaticServe();
+add_action( 'init', function() {
+    require_once( ABSPATH . '/wp-includes/pluggable.php' );
+    //Register Static service
+    $static = new StaticServe();
+    $enable_for_logged_in = apply_filters( 'serve_static_enable_logged_in', false );
 
-if ( ! is_admin() && ! is_user_logged_in() && ! strpos($_SERVER['REQUEST_URI'], 'elementor') !== false && get_option('serve_static_master_key', '') != '' && get_option( 'serve_static_master_key' ) == 1 ){
-    add_action('template_redirect', array( $static, 'Build' ));
-}
+    if ( $enable_for_logged_in ) {
+        if ( ! strpos($_SERVER['REQUEST_URI'], 'elementor') !== false && get_option('serve_static_master_key', '') != '' && get_option( 'serve_static_master_key' ) == 1 ){
+            add_action('template_redirect', array( $static, 'Build' ));
+        }
+        add_action('template_redirect', array( $static, 'use_fallback_method' ));
+    } else {
+        if ( ! is_user_logged_in() && ! strpos($_SERVER['REQUEST_URI'], 'elementor') !== false && get_option('serve_static_master_key', '') != '' && get_option( 'serve_static_master_key' ) == 1 ){
+            add_action('template_redirect', array( $static, 'Build' ));
+        }
 
-if ( ! is_user_logged_in() && ! is_admin() ) { // Bail out early for logged in users, and admins.
-    add_action('template_redirect', array( $static, 'use_fallback_method' ));
-}
+        if ( ! is_user_logged_in() ) { // Bail out early for logged in users, and admins.
+            add_action('template_redirect', array( $static, 'use_fallback_method' ));
+        }
+    }
+} );
